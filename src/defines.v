@@ -20,5 +20,10 @@
 `define InstMemNum 131072
 `define InstMemNumLog2 17
 
+// Register File
+`define RegAddrBus 4:0
+`define RegBus 31:0
+`define RegNum 32
+`define RegNumLog2 5
 
 `endif

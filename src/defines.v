@@ -14,11 +14,11 @@
 
 //****************** Hardware Properties ******************
 
-// Instruction ROM
+// Instruction Memory
 `define InstAddrBus 31:0 
 `define InstBus 31:0
-`define InstMemSize 131072 // 128kB
-`define InstMemSizeLog2 17
+`define InstMemNum 131072
+`define InstMemNumLog2 17
 
 
 `endif

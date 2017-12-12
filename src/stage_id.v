@@ -1,22 +1,20 @@
 `include "defines.v"
 
 module stage_id (
-	input  wire                rst        ,
-	input  wire [`InstAddrBus] pc_i       ,
-	input  wire [    `InstBus] inst_i     ,
-	input  wire [     `RegBus] reg1_data_i,
-	input  wire [     `RegBus] reg2_data_i,
-
-	output reg                 reg1_read_o,
-	output reg                 reg2_read_o,
-	output reg  [ `RegAddrBus] reg1_addr_o,
-	output reg  [ `RegAddrBus] reg2_addr_o,
-	
-	output reg  [   `AluOpBus] aluop_o    ,
-	output reg  [  `AluSelBus] alusel_o   ,
-	output reg  [     `RegBus] reg1_o     ,
-	output reg  [     `RegBus] reg2_o     ,
-	output reg  [ `RegAddrBus] wd_o       ,
+	input  wire                rst      ,
+	input  wire [`InstAddrBus] pc       ,
+	input  wire [    `InstBus] inst     ,
+	input  wire [     `RegBus] reg_data1,
+	input  wire [     `RegBus] reg_data1,
+	output reg                 reg_re1  ,
+	output reg                 reg_re2  ,
+	output reg  [ `RegAddrBus] reg_addr1,
+	output reg  [ `RegAddrBus] reg_addr2,
+	output reg  [   `AluOpBus] aluop    ,
+	output reg  [  `AluSelBus] alusel   ,
+	output reg  [     `RegBus] reg1     ,
+	output reg  [     `RegBus] reg2     ,
+	output reg  [ `RegAddrBus] wd_o     ,
 	output reg                 wreg_o
 );
 
@@ -52,7 +50,7 @@ module stage_id (
 			reg2_addr_o <= inst_i[20:16];
 			imm         <= `ZeroWord;
 			case (op)
-				`EXE_ORI : begin                        //ORIÖ¸Áî
+				`EXE_ORI : begin  
 					wreg_o    <= `WriteEnable;		aluop_o <= `EXE_OR_OP;
 					alusel_o  <= `EXE_RES_LOGIC; reg1_read_o <= 1'b1;	reg2_read_o <= 1'b0;
 					imm       <= {16'h0, inst_i[15:0]};		wd_o <= inst_i[20:16];

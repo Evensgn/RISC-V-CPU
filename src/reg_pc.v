@@ -1,6 +1,6 @@
 `include "defines.v"
 
-module pc_reg (
+module reg_pc (
 	input  wire                clk,
 	input  wire                rst,
 	output reg  [`InstAddrBus] pc ,
@@ -23,4 +23,4 @@ module pc_reg (
 		end
 	end
 
-endmodule // pc_reg
+endmodule // reg_pc

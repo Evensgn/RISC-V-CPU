@@ -18,9 +18,9 @@ module regfile (
 
 	// write
 	always @ (posedge clk) begin
-		if (rst == `False) begin
+		if (!rst) begin
 			// $0 cannot be written
-			if ((we == `True) && (waddr != `RegNumLog2'h0)) begin
+			if (we && waddr != 0) begin
 				regs[waddr] <= wdata;
 			end
 		end
@@ -28,31 +28,23 @@ module regfile (
 
 	// read 1
 	always @ (*) begin
-		if (rst == `True) begin
-			rdata1 <= `ZeroWord;
-		end else if (raddr1 == `RegNumLog2'h0) begin
-			rdata1 <= `ZeroWord;
-		end else if ((re1 == `True) && (we == `True) && (raddr1 == waddr)) begin
+		if (rst || !re1 || raddr1 == 0) begin
+			rdata1 <= 0;
+		end else if (we && raddr1 == waddr) begin
 			rdata1 <= wdata;
-		end else if (re1 == `True) begin
-			rdata1 <= regs[raddr1];
 		end else begin
-			rdata1 <= `ZeroWord;
+			rdata1 <= regs[raddr1];
 		end
 	end
 
-	// read 2
+	// read 1
 	always @ (*) begin
-		if(rst == `True) begin
-			rdata2 <= `ZeroWord;
-		end else if (raddr2 == `RegNumLog2'h0) begin
-			rdata2 <= `ZeroWord;
-		end else if ((re2 == `True) && (we == `True) && (raddr2 == waddr)) begin
+		if (rst || !re2 || raddr2 == 0) begin
+			rdata2 <= 0;
+		end else if (we && raddr2 == waddr) begin
 			rdata2 <= wdata;
-		end else if (re2 == `True) begin
-			rdata2 <= regs[raddr2];
 		end else begin
-			rdata2 <= `ZeroWord;
+			rdata2 <= regs[raddr2];
 		end
 	end
 

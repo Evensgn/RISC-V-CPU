@@ -1,6 +1,6 @@
 `include "defines.v"
 
-module if_id (
+module reg_if_id (
 	input  wire                clk    ,
 	input  wire                rst    ,
 	input  wire [`InstAddrBus] if_pc  ,
@@ -10,13 +10,13 @@ module if_id (
 );
 
 	always @ (posedge clk) begin
-		if (rst == `True) begin
-			id_pc   <= `ZeroWord;
-			id_inst <= `ZeroWord;
+		if (rst) begin
+			id_pc   <= 0;
+			id_inst <= 0;
 		end else begin
 			id_pc   <= if_pc;
 			id_inst <= if_inst;
 		end
 	end
 
-endmodule // if_id
+endmodule // reg_if_id

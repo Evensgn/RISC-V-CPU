@@ -12,8 +12,8 @@ module stage_id (
 	output reg  [ `RegAddrBus] reg_addr2,
 	output reg  [   `AluOpBus] aluop    ,
 	output reg  [  `AluSelBus] alusel   ,
-	output reg  [     `RegBus] reg1      ,
-	output reg  [     `RegBus] reg2      ,
+	output reg  [     `RegBus] opv1      ,
+	output reg  [     `RegBus] opv2      ,
 	output reg  [ `RegAddrBus] reg_waddr,
 	output reg                 we
 );
@@ -55,28 +55,27 @@ module stage_id (
 		end
 	end
 
-
 	always @ (*) begin
 		if(rst) begin
-			reg1_o <= `ZeroWord;
-		end else if(re1ad_o == 1'b1) begin
-			reg1_o <= reg1_data_i;
-		end else if(re1ad_o == 1'b0) begin
-			reg1_o <= imm;
+			opv1 <= 0;
+		end else if(re1 == 1) begin
+			opv1 <= reg_data1;
+		end else if(re1 == 0) begin
+			opv1 <= imm;
 		end else begin
-			reg1_o <= `ZeroWord;
+			opv1 <= 0;
 		end
 	end
 
 	always @ (*) begin
-		if(rst == `RstEnable) begin
-			reg2_o <= `ZeroWord;
-		end else if(re2ad_o == 1'b1) begin
-			reg2_o <= reg2_data_i;
-		end else if(re2ad_o == 1'b0) begin
-			reg2_o <= imm;
+		if(rst) begin
+			opv2 <= 0;
+		end else if(re2 == 1) begin
+			opv2 <= reg_data2;
+		end else if(re2 == 0) begin
+			opv2 <= imm;
 		end else begin
-			reg2_o <= `ZeroWord;
+			opv2 <= 0;
 		end
 	end
 

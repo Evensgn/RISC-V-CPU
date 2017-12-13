@@ -52,8 +52,8 @@ module stage_id (
 				default : begin
 				end
 			endcase // op
-		end
-	end
+		end // end else
+	end // always @ (*)
 
 	always @ (*) begin
 		if(rst) begin

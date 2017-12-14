@@ -17,7 +17,7 @@ module stage_ex (
 
 	always @ (*) begin
 		if(rst || alusel != `EXE_RES_LOGIC) begin
-			logicout <= 0;
+			logic_out <= 0;
 		end else begin
 			case (aluop)
 				`EXE_OR_OP : begin

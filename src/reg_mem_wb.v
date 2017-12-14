@@ -15,7 +15,7 @@ module reg_mem_wb (
 		if(rst) begin
 			wb_reg_waddr <= 0;
 			wb_we        <= 0;
-			wb_wdata     <= 0;
+			wb_reg_wdata     <= 0;
 		end else begin
 			wb_reg_waddr <= mem_reg_waddr;
 			wb_we        <= mem_we;

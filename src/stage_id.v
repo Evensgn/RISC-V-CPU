@@ -5,7 +5,7 @@ module stage_id (
 	input  wire [`InstAddrBus] pc       ,
 	input  wire [    `InstBus] inst     ,
 	input  wire [     `RegBus] reg_data1,
-	input  wire [     `RegBus] reg_data1,
+	input  wire [     `RegBus] reg_data2,
 	output reg                 re1  ,
 	output reg                 re2  ,
 	output reg  [ `RegAddrBus] reg_addr1,
@@ -22,7 +22,7 @@ module stage_id (
 	wire[2:0] funct3 = inst[14:12];
 	wire[6:0] funct7 = inst[31:25];
 	reg[`RegBus]	imm;
-	reg instvalid;
+	reg inst_valid;
 
 	wire[`RegBus] rd = inst[11:7];
 	wire[`RegBus] rs = inst[19:15];
@@ -33,7 +33,7 @@ module stage_id (
 		alusel <= i_alusel; \
 		inst_valid <= i_inst_valid; \
 		re1 <= i_re1; \
-		reg_addr <= i_reg_addr; \
+		reg_addr1 <= i_reg_addr1; \
 		re2 <= i_re2; \
 		reg_addr2 <= i_reg_addr2; \
 		we <= i_we; \

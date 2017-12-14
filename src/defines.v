@@ -102,7 +102,7 @@
 `define RegNumLog2 5
 
 // ALU
-`define AluOpBus 
-`define AluSelBus 3
+`define AluOpBus 7:0
+`define AluSelBus 2:0
 
 `endif

@@ -86,8 +86,6 @@
 `define EXE_RES_LOAD_STORE  3'b111
 
 //==================  Constants ================== 
-`define True 1'b1
-`define False 1'b0
 
 //==================  Hardware Properties ================== 
 

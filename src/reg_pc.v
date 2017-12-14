@@ -8,16 +8,16 @@ module reg_pc (
 );
 
 	always @ (posedge clk) begin
-		if (rst == `True) begin
-			ce <= `False;
+		if (rst == 1) begin
+			ce <= 0;
 		end else begin
-			ce <= `True;
+			ce <= 1;
 		end
 	end
 
 	always @ (posedge clk) begin
-		if (ce == `False) begin
-			pc <= 32'h00000000;
+		if (ce == 0) begin
+			pc <= 0;
 		end else begin
 			pc <= pc + 4'h4;
 		end

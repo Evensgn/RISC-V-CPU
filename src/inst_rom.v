@@ -8,7 +8,7 @@ module inst_rom (
 
 	reg[`InstBus]  inst_mem[0:`InstMemNum-1];
 
-	initial $readmemh("inst_mem.data", inst_mem);
+	initial $readmemh("D:/Files/Progs/RISC-V-CPU/src/inst_rom.data", inst_mem);
 
 	always @ (*) begin
 		if (!ce) begin

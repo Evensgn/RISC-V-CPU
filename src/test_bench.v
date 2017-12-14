@@ -13,7 +13,7 @@ module test_bench ();
 
 	initial begin
 		rst = 1;
-		#195 rst = 0;
+		#185 rst = 0;
 		#1000 $stop;
 	end
 

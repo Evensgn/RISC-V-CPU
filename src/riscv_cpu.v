@@ -148,7 +148,7 @@ module riscv_cpu (
 		// output
 		.reg_waddr_o(ex_reg_waddr_o),
 		.we_o       (ex_we_o       ),
-		.reg_wdata  (reg_wdata     )
+		.reg_wdata  (ex_reg_wdata     )
 	);
 
 	reg_ex_mem reg_ex_mem0 (

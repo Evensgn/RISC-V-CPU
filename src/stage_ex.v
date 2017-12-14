@@ -35,6 +35,7 @@ module stage_ex (
 		we_o <= we_i;
 		case (alusel)
 			`EXE_RES_LOGIC : begin
+				$display("EXE_RES_LOGIC");
 				reg_wdata <= logic_out;
 			end
 			default : begin

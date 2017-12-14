@@ -6,7 +6,7 @@ module reg_pc (
 	output reg  [`InstAddrBus] pc ,
 	output reg                 ce
 );
-
+	
 	always @ (posedge clk) begin
 		if (rst == 1) begin
 			ce <= 0;

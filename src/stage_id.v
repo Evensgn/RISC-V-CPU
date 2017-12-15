@@ -53,8 +53,35 @@ module stage_id (
 		end else begin
 			`SET_INST(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 			case (opcode)
-				`OP_IMM : begin
-					`SET_INST(`EXE_OR_OP, `EXE_RES_LOGIC, 1, 1, rs, 0, 0, 1, rd, ({20'h0, inst[31:20]}));
+				`OP_OP_IMM : begin
+					case (funct3)
+						`FUNCT3_XORI: begin
+							`SET_INST(`EXE_XOR_OP, `EXE_RES_LOGIC, 1, 1, rs, 0, 0, 1, rd, ({20'h0, inst[31:20]}));
+						end
+						`FUNCT3_ORI: begin
+							`SET_INST(`EXE_OR_OP, `EXE_RES_LOGIC, 1, 1, rs, 0, 0, 1, rd, ({20'h0, inst[31:20]}));
+						end
+						`FUNCT3_ANDI: begin
+							`SET_INST(`EXE_AND_OP, `EXE_RES_LOGIC, 1, 1, rs, 0, 0, 1, rd, ({20'h0, inst[31:20]}));
+						end
+						default : begin
+						end
+					endcase // funct3
+				end
+				`OP_OP : begin
+					case (funct3)
+						`FUNCT3_XOR: begin
+							`SET_INST(`EXE_XOR_OP, `EXE_RES_LOGIC, 1, 1, rs, 1, rt, 1, rd, 0);
+						end
+						`FUNCT3_OR: begin
+							`SET_INST(`EXE_OR_OP, `EXE_RES_LOGIC, 1, 1, rs, 1, rt, 1, rd, 0);
+						end
+						`FUNCT3_AND: begin
+							`SET_INST(`EXE_AND_OP, `EXE_RES_LOGIC, 1, 1, rs, 1, rt, 1, rd, 0);
+						end
+						default : begin
+						end
+					endcase // funct3
 				end
 				default : begin
 				end

@@ -20,8 +20,14 @@ module stage_ex (
 			logic_out <= 0;
 		end else begin
 			case (aluop)
+				`EXE_XOR_OP : begin
+					logic_out <= opv1 ^ opv2;
+				end
 				`EXE_OR_OP : begin
 					logic_out <= opv1 | opv2;
+				end
+				`EXE_AND_OP : begin
+					logic_out <= opv1 & opv2;
 				end
 				default : begin
 					logic_out <= 0;

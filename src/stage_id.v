@@ -1,20 +1,27 @@
 `include "defines.v"
 
 module stage_id (
-	input  wire                rst      ,
-	input  wire [`InstAddrBus] pc       ,
-	input  wire [    `InstBus] inst     ,
-	input  wire [     `RegBus] reg_data1,
-	input  wire [     `RegBus] reg_data2,
-	output reg                 re1  ,
-	output reg                 re2  ,
-	output reg  [ `RegAddrBus] reg_addr1,
-	output reg  [ `RegAddrBus] reg_addr2,
-	output reg  [   `AluOpBus] aluop    ,
-	output reg  [  `AluSelBus] alusel   ,
-	output reg  [     `RegBus] opv1      ,
-	output reg  [     `RegBus] opv2      ,
-	output reg  [ `RegAddrBus] reg_waddr,
+	input  wire                rst          ,
+	input  wire [`InstAddrBus] pc           ,
+	input  wire [    `InstBus] inst         ,
+	input  wire [     `RegBus] reg_data1    ,
+	input  wire [     `RegBus] reg_data2    ,
+	// forwarding
+	input  wire                ex_we        ,
+	input  wire [     `RegBus] ex_reg_wdata ,
+	input  wire [ `RegAddrBus] ex_reg_waddr ,
+	input  wire                mem_we       ,
+	input  wire [     `RegBus] mem_reg_wdata,
+	input  wire [ `RegAddrBus] mem_reg_waddr,
+	output reg                 re1          ,
+	output reg                 re2          ,
+	output reg  [ `RegAddrBus] reg_addr1    ,
+	output reg  [ `RegAddrBus] reg_addr2    ,
+	output reg  [   `AluOpBus] aluop        ,
+	output reg  [  `AluSelBus] alusel       ,
+	output reg  [     `RegBus] opv1         ,
+	output reg  [     `RegBus] opv2         ,
+	output reg  [ `RegAddrBus] reg_waddr    ,
 	output reg                 we
 );
 
@@ -58,9 +65,13 @@ module stage_id (
 	always @ (*) begin
 		if(rst) begin
 			opv1 <= 0;
-		end else if(re1 == 1) begin
+		end else if (re1 && ex_we && (ex_reg_waddr == reg_addr1)) begin
+			opv1 <= ex_reg_wdata;
+		end else if (re1 && mem_we && (mem_reg_waddr == reg_addr1)) begin
+			opv1 <= mem_reg_wdata;
+		end else if(re1) begin
 			opv1 <= reg_data1;
-		end else if(re1 == 0) begin
+		end else if(!re1) begin
 			opv1 <= imm;
 		end else begin
 			opv1 <= 0;
@@ -70,9 +81,13 @@ module stage_id (
 	always @ (*) begin
 		if(rst) begin
 			opv2 <= 0;
-		end else if(re2 == 1) begin
+		end else if (re2 && ex_we && (ex_reg_waddr == reg_addr2)) begin
+			opv2 <= ex_reg_wdata;
+		end else if (re2 && mem_we && (mem_reg_waddr == reg_addr2)) begin
+			opv2 <= mem_reg_wdata;
+		end else if(re2) begin
 			opv2 <= reg_data2;
-		end else if(re2 == 0) begin
+		end else if(!re2) begin
 			opv2 <= imm;
 		end else begin
 			opv2 <= 0;

@@ -83,22 +83,30 @@ module riscv_cpu (
 
 	stage_id stage_id0 (
 		// input
-		.rst      (rst         ),
-		.pc       (id_pc       ),
-		.inst     (id_inst     ),
-		.reg_data1(id_reg_data1),
-		.reg_data2(id_reg_data2),
+		.rst          (rst            ),
+		.pc           (id_pc          ),
+		.inst         (id_inst        ),
+		.reg_data1    (id_reg_data1   ),
+		.reg_data2    (id_reg_data2   ),
+		
+		.ex_we        (ex_we_o        ),
+		.ex_reg_waddr (ex_reg_waddr_o ),
+		.ex_reg_wdata (ex_reg_wdata   ),
+		.mem_we       (mem_we_o       ),
+		.mem_reg_waddr(mem_reg_waddr_o),
+		.mem_reg_wdata(mem_reg_wdata_o),
+		
 		// output
-		.re1      (id_re1      ),
-		.re2      (id_re2      ),
-		.reg_addr1(id_reg_addr1),
-		.reg_addr2(id_reg_addr2),
-		.aluop    (id_aluop    ),
-		.alusel   (id_alusel   ),
-		.opv1     (id_opv1     ),
-		.opv2     (id_opv2     ),
-		.we       (id_we       ),
-		.reg_waddr(id_reg_waddr)
+		.re1          (id_re1         ),
+		.re2          (id_re2         ),
+		.reg_addr1    (id_reg_addr1   ),
+		.reg_addr2    (id_reg_addr2   ),
+		.aluop        (id_aluop       ),
+		.alusel       (id_alusel      ),
+		.opv1         (id_opv1        ),
+		.opv2         (id_opv2        ),
+		.we           (id_we          ),
+		.reg_waddr    (id_reg_waddr   )
 	);
 
 	regfile regfile0 (

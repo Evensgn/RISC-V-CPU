@@ -73,19 +73,29 @@
 `define FUNCT7_OR  7'b0000000
 `define FUNCT7_AND 7'b0000000
 
+//================== AluSel ================== 
+`define EXE_RES_LOGIC       3'b001
+`define EXE_RES_SHIFT       3'b010
+`define EXE_RES_MOVE        3'b011
+`define EXE_RES_NOP         3'b000
+`define EXE_RES_ARITH       3'b100
+`define EXE_RES_MUL         3'b101
+`define EXE_RES_JUMP_BRANCH 3'b110
+`define EXE_RES_LOAD_STORE  3'b111
+
 //================== AluOp ==================
 `define EXE_AND_OP 8'b00100100
 `define EXE_OR_OP  8'b00100101
 `define EXE_XOR_OP 8'b00100110
-`define EXE_NOR_OP 8'b00100111
+//`define EXE_NOR_OP 8'b00100111
 `define EXE_NOP_OP 8'b00000000
 
 `define EXE_SLL_OP  8'b01111100
-`define EXE_SLLV_OP 8'b00000100
+//`define EXE_SLLV_OP 8'b00000100
 `define EXE_SRL_OP  8'b00000010
-`define EXE_SRLV_OP 8'b00000110
+//`define EXE_SRLV_OP 8'b00000110
 `define EXE_SRA_OP  8'b00000011
-`define EXE_SRAV_OP 8'b00000111
+//`define EXE_SRAV_OP 8'b00000111
 
 `define EXE_MOVZ_OP 8'b00001010
 `define EXE_MOVN_OP 8'b00001011
@@ -140,16 +150,6 @@
 `define EXE_SW_OP  8'b11101011
 `define EXE_SWL_OP 8'b11101010
 `define EXE_SWR_OP 8'b11101110
-
-//================== AluSel ================== 
-`define EXE_RES_LOGIC       3'b001
-`define EXE_RES_SHIFT       3'b010
-`define EXE_RES_MOVE        3'b011
-`define EXE_RES_NOP         3'b000
-`define EXE_RES_ARITH       3'b100
-`define EXE_RES_MUL         3'b101
-`define EXE_RES_JUMP_BRANCH 3'b110
-`define EXE_RES_LOAD_STORE  3'b111
 
 //==================  Constants ================== 
 

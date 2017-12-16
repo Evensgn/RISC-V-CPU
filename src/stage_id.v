@@ -28,14 +28,14 @@ module stage_id (
 	wire[6:0] opcode = inst[6:0];
 	wire[2:0] funct3 = inst[14:12];
 	wire[6:0] funct7 = inst[31:25];
-	reg[`RegBus]	imm;
+	wire[11:0] imm12 = inst[31:20];
 	reg inst_valid;
 
 	wire[`RegBus] rd = inst[11:7];
 	wire[`RegBus] rs = inst[19:15];
 	wire[`RegBus] rt = inst[24:20];
 
-	`define SET_INST(i_aluop, i_alusel, i_inst_valid, i_re1, i_reg_addr1, i_re2, i_reg_addr2, i_we, i_reg_waddr, i_imm) \
+	`define SET_INST(i_alusel, i_aluop, i_inst_valid, i_re1, i_reg_addr1, i_re2, i_reg_addr2, i_we, i_reg_waddr, i_imm) \
 		aluop <= i_aluop; \
 		alusel <= i_alusel; \
 		inst_valid <= i_inst_valid; \
@@ -55,14 +55,29 @@ module stage_id (
 			case (opcode)
 				`OP_OP_IMM : begin
 					case (funct3)
-						`FUNCT3_XORI: begin
-							`SET_INST(`EXE_XOR_OP, `EXE_RES_LOGIC, 1, 1, rs, 0, 0, 1, rd, ({20'h0, inst[31:20]}));
+						`FUNCT3_XORI : begin
+							`SET_INST(`EXE_RES_LOGIC, `EXE_XOR_OP, 1, 1, rs, 0, 0, 1, rd, ({20'h0, imm12}));
 						end
-						`FUNCT3_ORI: begin
-							`SET_INST(`EXE_OR_OP, `EXE_RES_LOGIC, 1, 1, rs, 0, 0, 1, rd, ({20'h0, inst[31:20]}));
+						`FUNCT3_ORI : begin
+							`SET_INST(`EXE_RES_LOGIC, `EXE_OR_OP, 1, 1, rs, 0, 0, 1, rd, ({20'h0, imm12}));
 						end
-						`FUNCT3_ANDI: begin
-							`SET_INST(`EXE_AND_OP, `EXE_RES_LOGIC, 1, 1, rs, 0, 0, 1, rd, ({20'h0, inst[31:20]}));
+						`FUNCT3_ANDI : begin
+							`SET_INST(`EXE_RES_LOGIC, `EXE_AND_OP, 1, 1, rs, 0, 0, 1, rd, ({20'h0, imm12}));
+						end
+						`FUNCT3_SLLI : begin
+							`SET_INST(`EXE_RES_SHIFT, `EXE_SLL_OP, 1, 1, rs, 0, 0, 1, rd, rt);
+						end
+						`FUNCT3_SRLI_SRAI : begin
+							case (funct7)
+								`FUNCT7_SRLI : begin
+									`SET_INST(`EXE_RES_SHIFT, `EXE_SRL_OP, 1, 1, rs, 0, 0, 1, rd, rt);
+								end
+								`FUNCT7_SRAI : begin
+									`SET_INST(`EXE_RES_SHIFT, `EXE_SRA_OP, 1, 1, rs, 0, 0, 1, rd, rt);
+								end
+								default : begin
+								end
+							endcase
 						end
 						default : begin
 						end
@@ -70,14 +85,14 @@ module stage_id (
 				end
 				`OP_OP : begin
 					case (funct3)
-						`FUNCT3_XOR: begin
-							`SET_INST(`EXE_XOR_OP, `EXE_RES_LOGIC, 1, 1, rs, 1, rt, 1, rd, 0);
+						`FUNCT3_XOR : begin
+							`SET_INST(`EXE_RES_LOGIC, `EXE_XOR_OP, 1, 1, rs, 1, rt, 1, rd, 0);
 						end
-						`FUNCT3_OR: begin
-							`SET_INST(`EXE_OR_OP, `EXE_RES_LOGIC, 1, 1, rs, 1, rt, 1, rd, 0);
+						`FUNCT3_OR : begin
+							`SET_INST(`EXE_RES_LOGIC, `EXE_OR_OP, 1, 1, rs, 1, rt, 1, rd, 0);
 						end
-						`FUNCT3_AND: begin
-							`SET_INST(`EXE_AND_OP, `EXE_RES_LOGIC, 1, 1, rs, 1, rt, 1, rd, 0);
+						`FUNCT3_AND : begin
+							`SET_INST(`EXE_RES_LOGIC, `EXE_AND_OP, 1, 1, rs, 1, rt, 1, rd, 0);
 						end
 						default : begin
 						end

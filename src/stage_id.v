@@ -29,6 +29,7 @@ module stage_id (
 	wire[2:0] funct3 = inst[14:12];
 	wire[6:0] funct7 = inst[31:25];
 	wire[11:0] imm12 = inst[31:20];
+	reg[11:0] imm;
 	reg inst_valid;
 
 	wire[`RegBus] rd = inst[11:7];

@@ -56,6 +56,15 @@ module stage_id (
 			case (opcode)
 				`OP_OP_IMM : begin
 					case (funct3)
+						`FUNCT3_ADDI : begin
+							`SET_INST(`EXE_RES_ARITH, `EXE_ADD_OP, 1, 1, rs, 0, 0, 1, rd, ({{20{imm12[11]}}, imm12}));
+						end
+						`FUNCT3_SLTI : begin
+							`SET_INST(`EXE_RES_ARITH, `EXE_SLTI_OP, 1, 1, rs, 0, 0, 1, rd, ({{20{imm12[11]}}, imm12}));
+						end
+						`FUNCT3_SLTIU : begin
+							`SET_INST(`EXE_RES_ARITH, `EXE_SLTIU_OP, 1, 1, rs, 0, 0, 1, rd, ({{20{imm12[11]}}, imm12}));
+						end
 						`FUNCT3_XORI : begin
 							`SET_INST(`EXE_RES_LOGIC, `EXE_XOR_OP, 1, 1, rs, 0, 0, 1, rd, ({20'h0, imm12}));
 						end
@@ -86,8 +95,41 @@ module stage_id (
 				end
 				`OP_OP : begin
 					case (funct3)
+						`FUNCT3_ADD_SUB : begin
+							case (funct7)
+								`FUNCT7_ADD : begin
+									`SET_INST(`EXE_RES_ARITH, `EXE_ADD_OP, 1, 1, rs, 1, rt, 1, rd, 0);
+								end
+								`FUNCT7_SUB : begin
+									`SET_INST(`EXE_RES_ARITH, `EXE_SUB_OP, 1, 1, rs, 1, rt, 1, rd, 0);
+								end
+								default : begin
+								end
+							endcase // funct7
+						end
+						`FUNCT3_SLL : begin
+							`SET_INST(`EXE_RES_SHIFT, `EXE_SLL_OP, 1, 1, rs, 1, rt, 1, rd, 0);
+						end
+						`FUNCT3_SLT : begin
+							`SET_INST(`EXE_RES_ARITH, `EXE_SLT_OP, 1, 1, rs, 1, rt, 1, rd, 0);
+						end
+						`FUNCT3_SLTU : begin
+							`SET_INST(`EXE_RES_ARITH, `EXE_SLTU_OP, 1, 1, rs, 1, rt, 1, rd, 0);
+						end
 						`FUNCT3_XOR : begin
 							`SET_INST(`EXE_RES_LOGIC, `EXE_XOR_OP, 1, 1, rs, 1, rt, 1, rd, 0);
+						end
+						`FUNCT3_SRL_SRA : begin
+							case (funct7)
+								`FUNCT7_SRL : begin
+									`SET_INST(`EXE_RES_SHIFT, `EXE_SRL_OP, 1, 1, rs, 1, rt, 1, rd, 0);
+								end
+								`FUNCT7_SRA : begin
+									`SET_INST(`EXE_RES_SHIFT, `EXE_SRA_OP, 1, 1, rs, 1, rt, 1, rd, 0);
+								end
+								default : begin
+								end
+							endcase // funct7
 						end
 						`FUNCT3_OR : begin
 							`SET_INST(`EXE_RES_LOGIC, `EXE_OR_OP, 1, 1, rs, 1, rt, 1, rd, 0);

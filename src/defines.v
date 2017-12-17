@@ -113,15 +113,15 @@
 `define EXE_SUB_OP   8'b00100010
 `define EXE_SUBU_OP  8'b00100011
 `define EXE_ADDI_OP  8'b01010101
-`define EXE_ADDIU_OP 8'b01010110
-`define EXE_CLZ_OP   8'b10110000
-`define EXE_CLO_OP   8'b10110001
+//`define EXE_ADDIU_OP 8'b01010110
+//`define EXE_CLZ_OP   8'b10110000
+//`define EXE_CLO_OP   8'b10110001
 
-`define EXE_MULT_OP  8'b00011000
-`define EXE_MULTU_OP 8'b00011001
-`define EXE_MUL_OP   8'b10101001
-`define EXE_DIV_OP   8'b00011010
-`define EXE_DIVU_OP  8'b00011011
+//`define EXE_MULT_OP  8'b00011000
+//`define EXE_MULTU_OP 8'b00011001
+//`define EXE_MUL_OP   8'b10101001
+//`define EXE_DIV_OP   8'b00011010
+//`define EXE_DIVU_OP  8'b00011011
 
 `define EXE_J_OP      8'b01001111
 `define EXE_JAL_OP    8'b01010000

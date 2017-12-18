@@ -19,7 +19,7 @@ module regfile (
 	// write
 	always @ (posedge clk) begin
 		if (!rst) begin
-			// $0 cannot be written
+			// x0 cannot be written
 			if (we && waddr != 0) begin
 				regs[waddr] <= wdata;
 			end
@@ -37,7 +37,7 @@ module regfile (
 		end
 	end
 
-	// read 1
+	// read 2
 	always @ (*) begin
 		if (rst || !re2 || raddr2 == 0) begin
 			rdata2 <= 0;

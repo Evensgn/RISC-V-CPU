@@ -60,10 +60,10 @@ module stage_id (
 							`SET_INST(`EXE_RES_ARITH, `EXE_ADD_OP, 1, 1, rs, 0, 0, 1, rd, ({{20{imm12[11]}}, imm12}));
 						end
 						`FUNCT3_SLTI : begin
-							`SET_INST(`EXE_RES_ARITH, `EXE_SLTI_OP, 1, 1, rs, 0, 0, 1, rd, ({{20{imm12[11]}}, imm12}));
+							`SET_INST(`EXE_RES_ARITH, `EXE_SLT_OP, 1, 1, rs, 0, 0, 1, rd, ({{20{imm12[11]}}, imm12}));
 						end
 						`FUNCT3_SLTIU : begin
-							`SET_INST(`EXE_RES_ARITH, `EXE_SLTIU_OP, 1, 1, rs, 0, 0, 1, rd, ({{20{imm12[11]}}, imm12}));
+							`SET_INST(`EXE_RES_ARITH, `EXE_SLTU_OP, 1, 1, rs, 0, 0, 1, rd, ({{20{imm12[11]}}, imm12}));
 						end
 						`FUNCT3_XORI : begin
 							`SET_INST(`EXE_RES_LOGIC, `EXE_XOR_OP, 1, 1, rs, 0, 0, 1, rd, ({20'h0, imm12}));

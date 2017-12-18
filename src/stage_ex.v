@@ -15,6 +15,7 @@ module stage_ex (
 
 	reg[`RegBus] logic_out;
 	reg[`RegBus] shift_out;
+	reg[`RegBus] arith_out;
 
 	// EXE_RES_LOGIC
 	always @ (*) begin
@@ -56,6 +57,31 @@ module stage_ex (
 				end
 				default : begin
 					shift_out <= 0;
+				end
+			endcase // aluop
+		end // end else
+	end // always @ (*)
+
+	// EXE_RES_ARITH
+	always @ (*) begin
+		if(rst || alusel != `EXE_RES_ARITH) begin
+			arith_out <= 0;
+		end else begin
+			case (aluop)
+				`EXE_ADD_OP : begin
+					arith_out <= opv1 + opv2;
+				end
+				`EXE_SUB_OP : begin
+					arith_out <= opv1 - opv2;
+				end
+				`EXE_SLT_OP : begin
+					arith_out <= $signed(opv1) < $signed(opv2);
+				end
+				`EXE_SLTU_OP : begin
+					arith_out <= opv1 < opv2;
+				end
+				default : begin
+					arith_out <= 0;
 				end
 			endcase // aluop
 		end // end else

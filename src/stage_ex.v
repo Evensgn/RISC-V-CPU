@@ -99,6 +99,10 @@ module stage_ex (
 				$display("EXE_RES_SHIFT");
 				reg_wdata <= shift_out;
 			end
+			`EXE_RES_ARITH : begin
+				$display("EXE_RES_ARITH");
+				reg_wdata <= arith_out;
+			end
 			default : begin
 				reg_wdata <= 0;
 			end

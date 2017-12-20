@@ -1,12 +1,13 @@
 `include "defines.v"
 
 module reg_pc (
-	input  wire                clk,
-	input  wire                rst,
-	output reg  [`InstAddrBus] pc ,
+	input  wire                clk  ,
+	input  wire                rst  ,
+	input  wire [         5:0] stall,
+	output reg  [`InstAddrBus] pc   ,
 	output reg                 ce
 );
-	
+
 	always @ (posedge clk) begin
 		if (rst == 1) begin
 			ce <= 0;
@@ -18,7 +19,7 @@ module reg_pc (
 	always @ (posedge clk) begin
 		if (ce == 0) begin
 			pc <= 0;
-		end else begin
+		end else if (!stall[0]) begin
 			pc <= pc + 4'h4;
 		end
 	end

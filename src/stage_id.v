@@ -22,7 +22,8 @@ module stage_id (
 	output reg  [     `RegBus] opv1         ,
 	output reg  [     `RegBus] opv2         ,
 	output reg  [ `RegAddrBus] reg_waddr    ,
-	output reg                 we
+	output reg                 we           ,
+	output wire                stallreq
 );
 
 	wire[6:0] opcode = inst[6:0];
@@ -35,6 +36,10 @@ module stage_id (
 	wire[`RegBus] rd = inst[11:7];
 	wire[`RegBus] rs = inst[19:15];
 	wire[`RegBus] rt = inst[24:20];
+
+	reg stallreq1;
+	reg stallreq2;
+	assign stallreq = stallreq1 || stallreq2;
 
 	`define SET_INST(i_alusel, i_aluop, i_inst_valid, i_re1, i_reg_addr1, i_re2, i_reg_addr2, i_we, i_reg_waddr, i_imm) \
 		aluop <= i_aluop; \
@@ -147,36 +152,28 @@ module stage_id (
 		end // end else
 	end // always @ (*)
 
-	always @ (*) begin
-		if(rst) begin
-			opv1 <= 0;
-		end else if (re1 && ex_we && (ex_reg_waddr == reg_addr1)) begin
-			opv1 <= ex_reg_wdata;
-		end else if (re1 && mem_we && (mem_reg_waddr == reg_addr1)) begin
-			opv1 <= mem_reg_wdata;
-		end else if(re1) begin
-			opv1 <= reg_data1;
-		end else if(!re1) begin
-			opv1 <= imm;
-		end else begin
-			opv1 <= 0;
+	`define SET_OPV(opv, re, reg_addr, reg_data, stallreq) \
+		stallreq <= 0; \
+		if(rst) begin \
+			opv <= 0; \
+		end else if (re && ex_we && (ex_reg_waddr == reg_addr)) begin \
+			opv <= ex_reg_wdata; \
+		end else if (re && mem_we && (mem_reg_waddr == reg_addr)) begin \
+			opv <= mem_reg_wdata; \
+		end else if(re) begin \
+			opv <= reg_data; \
+		end else if(!re) begin \
+			opv <= imm; \
+		end else begin \
+			opv <= 0; \
 		end
+
+	always @ (*) begin
+		`SET_OPV(opv1, re1, reg_addr1, reg_data1, stallreq1)
 	end
 
 	always @ (*) begin
-		if(rst) begin
-			opv2 <= 0;
-		end else if (re2 && ex_we && (ex_reg_waddr == reg_addr2)) begin
-			opv2 <= ex_reg_wdata;
-		end else if (re2 && mem_we && (mem_reg_waddr == reg_addr2)) begin
-			opv2 <= mem_reg_wdata;
-		end else if(re2) begin
-			opv2 <= reg_data2;
-		end else if(!re2) begin
-			opv2 <= imm;
-		end else begin
-			opv2 <= 0;
-		end
+		`SET_OPV(opv2, re2, reg_addr2, reg_data2, stallreq2)
 	end
 
 endmodule // stage_id

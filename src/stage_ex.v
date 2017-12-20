@@ -10,7 +10,8 @@ module stage_ex (
 	input  wire               we_i       ,
 	output reg  [`RegAddrBus] reg_waddr_o,
 	output reg                we_o       ,
-	output reg  [    `RegBus] reg_wdata
+	output reg  [    `RegBus] reg_wdata  ,
+	output reg                stallreq
 );
 
 	reg[`RegBus] logic_out;
@@ -88,6 +89,7 @@ module stage_ex (
 	end // always @ (*)
 
 	always @ (*) begin
+		stallreq    <= 0;
 		reg_waddr_o <= reg_waddr_i;
 		we_o        <= we_i;
 		case (alusel)

@@ -1,7 +1,7 @@
 `include "defines.v"
 
 module ctrl (
-	input  wire       rst             ,
+	input  wire       rst        ,
 	input  wire       stallreq_id,
 	input  wire       stallreq_ex,
 	output reg  [5:0] stall
@@ -17,14 +17,13 @@ module ctrl (
 	always @ (*) begin
 		if(rst) begin
 			stall <= 6'b000000;
-		end else if(stallreq_ex == `Stop) begin
+		end else if(stallreq_ex) begin
 			stall <= 6'b001111;
-		end else if(stallreq_id == `Stop) begin
+		end else if(stallreq_id) begin
 			stall <= 6'b000111;
 		end else begin
 			stall <= 6'b000000;
 		end
 	end // always @ (*)
-
 
 endmodule

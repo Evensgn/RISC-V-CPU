@@ -30,7 +30,9 @@ module stage_id (
 	wire[2:0] funct3 = inst[14:12];
 	wire[6:0] funct7 = inst[31:25];
 	wire[11:0] imm12 = inst[31:20];
-	reg[11:0] imm;
+	wire[19:0] imm20 = inst[31:12];
+	reg[31:0] imm1;
+	reg[31:0] imm2;
 	reg inst_valid;
 
 	wire[`RegBus] rd = inst[11:7];
@@ -41,7 +43,7 @@ module stage_id (
 	reg stallreq2;
 	assign stallreq = stallreq1 || stallreq2;
 
-	`define SET_INST(i_alusel, i_aluop, i_inst_valid, i_re1, i_reg_addr1, i_re2, i_reg_addr2, i_we, i_reg_waddr, i_imm) \
+	`define SET_INST(i_alusel, i_aluop, i_inst_valid, i_re1, i_reg_addr1, i_re2, i_reg_addr2, i_we, i_reg_waddr, i_imm1, i_imm2) \
 		aluop <= i_aluop; \
 		alusel <= i_alusel; \
 		inst_valid <= i_inst_valid; \
@@ -51,7 +53,8 @@ module stage_id (
 		reg_addr2 <= i_reg_addr2; \
 		we <= i_we; \
 		reg_waddr <= i_reg_waddr; \
-		imm <= i_imm
+		imm1 <= i_imm1; \ 
+		imm2 <= i_imm2
 	
 	always @ (*) begin
 		if (rst) begin
@@ -59,36 +62,42 @@ module stage_id (
 		end else begin
 			`SET_INST(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 			case (opcode)
+				`OP_LUI : begin
+					`SET_INST(`EXE_RES_ARITH, `EXE_ADD_OP, 1, 0, 0, 0, 0, 1, rd, ({imm20, 12'b0}), 0);
+				end
+				`OP_AUIPC : begin
+					`SET_INST(`EXE_RES_ARITH, `EXE_ADD_OP, 1, 0, 0, 0, 0, 1, rd, ({imm20, 12'b0}), pc);
+				end
 				`OP_OP_IMM : begin
 					case (funct3)
 						`FUNCT3_ADDI : begin
-							`SET_INST(`EXE_RES_ARITH, `EXE_ADD_OP, 1, 1, rs, 0, 0, 1, rd, ({{20{imm12[11]}}, imm12}));
+							`SET_INST(`EXE_RES_ARITH, `EXE_ADD_OP, 1, 1, rs, 0, 0, 1, rd, 0, ({{20{imm12[11]}}, imm12}));
 						end
 						`FUNCT3_SLTI : begin
-							`SET_INST(`EXE_RES_ARITH, `EXE_SLT_OP, 1, 1, rs, 0, 0, 1, rd, ({{20{imm12[11]}}, imm12}));
+							`SET_INST(`EXE_RES_ARITH, `EXE_SLT_OP, 1, 1, rs, 0, 0, 1, rd, 0, ({{20{imm12[11]}}, imm12}));
 						end
 						`FUNCT3_SLTIU : begin
-							`SET_INST(`EXE_RES_ARITH, `EXE_SLTU_OP, 1, 1, rs, 0, 0, 1, rd, ({{20{imm12[11]}}, imm12}));
+							`SET_INST(`EXE_RES_ARITH, `EXE_SLTU_OP, 1, 1, rs, 0, 0, 1, rd, 0, ({{20{imm12[11]}}, imm12}));
 						end
 						`FUNCT3_XORI : begin
-							`SET_INST(`EXE_RES_LOGIC, `EXE_XOR_OP, 1, 1, rs, 0, 0, 1, rd, ({20'h0, imm12}));
+							`SET_INST(`EXE_RES_LOGIC, `EXE_XOR_OP, 1, 1, rs, 0, 0, 1, rd, 0, ({20'h0, imm12}));
 						end
 						`FUNCT3_ORI : begin
-							`SET_INST(`EXE_RES_LOGIC, `EXE_OR_OP, 1, 1, rs, 0, 0, 1, rd, ({20'h0, imm12}));
+							`SET_INST(`EXE_RES_LOGIC, `EXE_OR_OP, 1, 1, rs, 0, 0, 1, rd, 0, ({20'h0, imm12}));
 						end
 						`FUNCT3_ANDI : begin
-							`SET_INST(`EXE_RES_LOGIC, `EXE_AND_OP, 1, 1, rs, 0, 0, 1, rd, ({20'h0, imm12}));
+							`SET_INST(`EXE_RES_LOGIC, `EXE_AND_OP, 1, 1, rs, 0, 0, 1, rd, 0, ({20'h0, imm12}));
 						end
 						`FUNCT3_SLLI : begin
-							`SET_INST(`EXE_RES_SHIFT, `EXE_SLL_OP, 1, 1, rs, 0, 0, 1, rd, rt);
+							`SET_INST(`EXE_RES_SHIFT, `EXE_SLL_OP, 1, 1, rs, 0, 0, 1, rd, 0, rt);
 						end
 						`FUNCT3_SRLI_SRAI : begin
 							case (funct7)
 								`FUNCT7_SRLI : begin
-									`SET_INST(`EXE_RES_SHIFT, `EXE_SRL_OP, 1, 1, rs, 0, 0, 1, rd, rt);
+									`SET_INST(`EXE_RES_SHIFT, `EXE_SRL_OP, 1, 1, rs, 0, 0, 1, rd, 0, rt);
 								end
 								`FUNCT7_SRAI : begin
-									`SET_INST(`EXE_RES_SHIFT, `EXE_SRA_OP, 1, 1, rs, 0, 0, 1, rd, rt);
+									`SET_INST(`EXE_RES_SHIFT, `EXE_SRA_OP, 1, 1, rs, 0, 0, 1, rd, 0, rt);
 								end
 								default : begin
 								end
@@ -103,44 +112,44 @@ module stage_id (
 						`FUNCT3_ADD_SUB : begin
 							case (funct7)
 								`FUNCT7_ADD : begin
-									`SET_INST(`EXE_RES_ARITH, `EXE_ADD_OP, 1, 1, rs, 1, rt, 1, rd, 0);
+									`SET_INST(`EXE_RES_ARITH, `EXE_ADD_OP, 1, 1, rs, 1, rt, 1, rd, 0, 0);
 								end
 								`FUNCT7_SUB : begin
-									`SET_INST(`EXE_RES_ARITH, `EXE_SUB_OP, 1, 1, rs, 1, rt, 1, rd, 0);
+									`SET_INST(`EXE_RES_ARITH, `EXE_SUB_OP, 1, 1, rs, 1, rt, 1, rd, 0, 0);
 								end
 								default : begin
 								end
 							endcase // funct7
 						end
 						`FUNCT3_SLL : begin
-							`SET_INST(`EXE_RES_SHIFT, `EXE_SLL_OP, 1, 1, rs, 1, rt, 1, rd, 0);
+							`SET_INST(`EXE_RES_SHIFT, `EXE_SLL_OP, 1, 1, rs, 1, rt, 1, rd, 0, 0);
 						end
 						`FUNCT3_SLT : begin
-							`SET_INST(`EXE_RES_ARITH, `EXE_SLT_OP, 1, 1, rs, 1, rt, 1, rd, 0);
+							`SET_INST(`EXE_RES_ARITH, `EXE_SLT_OP, 1, 1, rs, 1, rt, 1, rd, 0, 0);
 						end
 						`FUNCT3_SLTU : begin
-							`SET_INST(`EXE_RES_ARITH, `EXE_SLTU_OP, 1, 1, rs, 1, rt, 1, rd, 0);
+							`SET_INST(`EXE_RES_ARITH, `EXE_SLTU_OP, 1, 1, rs, 1, rt, 1, rd, 0, 0);
 						end
 						`FUNCT3_XOR : begin
-							`SET_INST(`EXE_RES_LOGIC, `EXE_XOR_OP, 1, 1, rs, 1, rt, 1, rd, 0);
+							`SET_INST(`EXE_RES_LOGIC, `EXE_XOR_OP, 1, 1, rs, 1, rt, 1, rd, 0, 0);
 						end
 						`FUNCT3_SRL_SRA : begin
 							case (funct7)
 								`FUNCT7_SRL : begin
-									`SET_INST(`EXE_RES_SHIFT, `EXE_SRL_OP, 1, 1, rs, 1, rt, 1, rd, 0);
+									`SET_INST(`EXE_RES_SHIFT, `EXE_SRL_OP, 1, 1, rs, 1, rt, 1, rd, 0, 0);
 								end
 								`FUNCT7_SRA : begin
-									`SET_INST(`EXE_RES_SHIFT, `EXE_SRA_OP, 1, 1, rs, 1, rt, 1, rd, 0);
+									`SET_INST(`EXE_RES_SHIFT, `EXE_SRA_OP, 1, 1, rs, 1, rt, 1, rd, 0, 0);
 								end
 								default : begin
 								end
 							endcase // funct7
 						end
 						`FUNCT3_OR : begin
-							`SET_INST(`EXE_RES_LOGIC, `EXE_OR_OP, 1, 1, rs, 1, rt, 1, rd, 0);
+							`SET_INST(`EXE_RES_LOGIC, `EXE_OR_OP, 1, 1, rs, 1, rt, 1, rd, 0, 0);
 						end
 						`FUNCT3_AND : begin
-							`SET_INST(`EXE_RES_LOGIC, `EXE_AND_OP, 1, 1, rs, 1, rt, 1, rd, 0);
+							`SET_INST(`EXE_RES_LOGIC, `EXE_AND_OP, 1, 1, rs, 1, rt, 1, rd, 0, 0);
 						end
 						default : begin
 						end
@@ -152,7 +161,7 @@ module stage_id (
 		end // end else
 	end // always @ (*)
 
-	`define SET_OPV(opv, re, reg_addr, reg_data, stallreq) \
+	`define SET_OPV(opv, re, reg_addr, reg_data, imm, stallreq) \
 		stallreq <= 0; \
 		if(rst) begin \
 			opv <= 0; \
@@ -169,11 +178,11 @@ module stage_id (
 		end
 
 	always @ (*) begin
-		`SET_OPV(opv1, re1, reg_addr1, reg_data1, stallreq1)
+		`SET_OPV(opv1, re1, reg_addr1, reg_data1, imm1, stallreq1)
 	end
 
 	always @ (*) begin
-		`SET_OPV(opv2, re2, reg_addr2, reg_data2, stallreq2)
+		`SET_OPV(opv2, re2, reg_addr2, reg_data2, imm2, stallreq2)
 	end
 
 endmodule // stage_id

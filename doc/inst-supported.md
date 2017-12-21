@@ -1,5 +1,7 @@
 Supported RISC-V instructions in this CPU project:
 
+* LUI
+* AUIPC
 * OP-IMM:
 	* ADDI
 	* SLTI

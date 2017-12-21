@@ -18,3 +18,5 @@ _start:
 	slt x8, x6, x5 # x8 = 0
 	slt x8, x5, x6 # x8 = 1
 	sub x9, x6, x5 # x9 = 0x460
+	lui x10, 0x45b27 # x10 = 0x45b27000
+	auipc x11, 0x21c43 # x11 = 0x21c43048

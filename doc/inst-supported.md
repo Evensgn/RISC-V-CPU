@@ -1,25 +1,25 @@
-Supported RISC-V instructions in this CPU project:
+Supported instructions in this project:
 
-* LUI
-* AUIPC
-* OP-IMM:
-	* ADDI
-	* SLTI
-	* SLTIU
-	* XORI
-	* ORI
-	* ANDI
-	* SLLI
-	* SRLI
-	* SRAI
-* OP:
-	* ADD
-	* SUB
-	* SLL
-	* SLT
-	* SLTU
-	* XOR
-	* SRL
-	* SRA
-	* OR
-	* AND
+| Instruction | opcode  |
+| ----------- | ------- | 
+| LUI         | LUI     |
+| AUIPC       | AUIPC   |
+| ADDI        | OP-IMM  |
+| SLTI        | OP-IMM  |
+| SLTIU       | OP-IMM  |
+| XORI        | OP-IMM  |
+| ORI         | OP-IMM  |
+| ANDI        | OP-IMM  |
+| SLLI        | OP-IMM  |
+| SRLI        | OP-IMM  |
+| SRAI        | OP-IMM  |
+| ADD         | OP      |
+| SUB         | OP      |
+| SLL         | OP      |
+| SLT         | OP      |
+| SLTU        | OP      |
+| XOR         | OP      |
+| SRL         | OP      |
+| SRA         | OP      |
+| OR          | OP      |
+| AND         | OP      |

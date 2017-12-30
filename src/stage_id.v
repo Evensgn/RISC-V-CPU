@@ -53,14 +53,14 @@ module stage_id (
 		reg_addr2 <= i_reg_addr2; \
 		we <= i_we; \
 		reg_waddr <= i_reg_waddr; \
-		imm1 <= i_imm1; \ 
+		imm1 <= i_imm1; \
 		imm2 <= i_imm2
 	
 	always @ (*) begin
 		if (rst) begin
-			`SET_INST(`EXE_NOP_OP, `EXE_RES_NOP, 1, 0, rs, 0, rt, 0, rd, 0);
+			`SET_INST(`EXE_NOP_OP, `EXE_RES_NOP, 1, 0, rs, 0, rt, 0, rd, 0, 0);
 		end else begin
-			`SET_INST(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+			`SET_INST(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 			case (opcode)
 				`OP_LUI : begin
 					`SET_INST(`EXE_RES_ARITH, `EXE_ADD_OP, 1, 0, 0, 0, 0, 1, rd, ({imm20, 12'b0}), 0);

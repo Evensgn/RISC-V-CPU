@@ -17,10 +17,17 @@ _start:
 	slti x8, x6, 0x7a3 # x8 = 0
 	slt x8, x6, x5 # x8 = 0
 	slt x8, x5, x6 # x8 = 1
-es_j1:
 	sub x9, x6, x5 # x9 = 0x460
 	lui x10, 0x45b27 # x10 = 0x45b27000
 	auipc x11, 0x21c43 # x11 = 0x21c43048
-	jal es_j1 # jump to sub x9, x6, x5 & x1 = 80 = 0x50
+es_j1:
+	bge x10, x11, es_j2 # jump to es_j2 & x1 = 80 = 0x50
 	ori x12, x0, 0x456 # x12 = 0x456
+	ori x13, x0, 0x2bc # x13 = 0x2bc
+	nop
+	nop
+	nop
+es_j2:
+	ori x12, x0, 0x5ef # x12 = 0x5ef
 	ori x13, x0, 0x123 # x13 = 0x123
+	# j es_j1 # jump to es_j1, which makes a infinite loop

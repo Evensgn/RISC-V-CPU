@@ -1,6 +1,6 @@
-Supported instructions in this project:
+## Supported Instructions in This CPU Project
 
-| Instruction | opcode  |
+| Instruction | OP Type |
 | ----------- | ------- | 
 | LUI         | LUI     |
 | AUIPC       | AUIPC   |

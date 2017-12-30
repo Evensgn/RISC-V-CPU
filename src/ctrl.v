@@ -17,9 +17,9 @@ module ctrl (
 	always @ (*) begin
 		if(rst) begin
 			stall <= 6'b000000;
-		end else if(stallreq_ex) begin
+		end else if (stallreq_ex) begin
 			stall <= 6'b001111;
-		end else if(stallreq_id) begin
+		end else if (stallreq_id) begin
 			stall <= 6'b000111;
 		end else begin
 			stall <= 6'b000000;

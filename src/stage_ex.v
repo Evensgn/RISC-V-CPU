@@ -105,6 +105,7 @@ module stage_ex (
 				$display("EXE_RES_ARITH");
 				reg_wdata <= arith_out;
 			end
+			`EXE_
 			default : begin
 				reg_wdata <= 0;
 			end

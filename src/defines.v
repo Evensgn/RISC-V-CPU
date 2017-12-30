@@ -85,31 +85,31 @@
 
 //================== AluOp ==================
 
+`define EXE_NOP_OP 0
 `define EXE_AND_OP 1
 `define EXE_OR_OP  2
 `define EXE_XOR_OP 3
 `define EXE_NOP_OP 4
 
-`define EXE_SLL_OP  5
-`define EXE_SRL_OP  6
-`define EXE_SRA_OP  7
+`define EXE_SLL_OP 5
+`define EXE_SRL_OP 6
+`define EXE_SRA_OP 7
 
-`define EXE_MOVZ_OP 8'b00001010
-`define EXE_MOVN_OP 8'b00001011
-`define EXE_MFHI_OP 8'b00010000
-`define EXE_MTHI_OP 8'b00010001
-`define EXE_MFLO_OP 8'b00010010
-`define EXE_MTLO_OP 8'b00010011
+`define EXE_ADD_OP  8
+`define EXE_SLT_OP  9
+`define EXE_SLTU_OP 10
+`define EXE_SUB_OP  11
 
-`define EXE_SLT_OP   8'b00101010
-`define EXE_SLTU_OP  8'b00101011
-`define EXE_SLTI_OP  8'b01010111
-`define EXE_SLTIU_OP 8'b01011000   
-`define EXE_ADD_OP   8'b00100000
-`define EXE_ADDU_OP  8'b00100001
-`define EXE_SUB_OP   8'b00100010
-`define EXE_SUBU_OP  8'b00100011
-`define EXE_ADDI_OP  8'b01010101
+`define EXE_JAL_OP  12
+`define EXE_JALR_OP 13
+`define EXE_BEQ_OP  14
+`define EXE_BNE_OP  15
+`define EXE_BLT_OP  16
+`define EXE_BGE_OP  17
+`define EXE_BLTU_OP 18
+`define EXE_BGEU_OP 19
+
+
 //`define EXE_ADDIU_OP 8'b01010110
 //`define EXE_CLZ_OP   8'b10110000
 //`define EXE_CLO_OP   8'b10110001
@@ -120,18 +120,18 @@
 //`define EXE_DIV_OP   8'b00011010
 //`define EXE_DIVU_OP  8'b00011011
 
-`define EXE_J_OP      8'b01001111
-`define EXE_JAL_OP    8'b01010000
-`define EXE_JALR_OP   8'b00001001
-`define EXE_JR_OP     8'b00001000
-`define EXE_BEQ_OP    8'b01010001
-`define EXE_BGEZ_OP   8'b01000001
-`define EXE_BGEZAL_OP 8'b01001011
-`define EXE_BGTZ_OP   8'b01010100
-`define EXE_BLEZ_OP   8'b01010011
-`define EXE_BLTZ_OP   8'b01000000
-`define EXE_BLTZAL_OP 8'b01001010
-`define EXE_BNE_OP    8'b01010010
+//`define EXE_J_OP      8'b01001111
+//`define EXE_JAL_OP    8'b01010000
+//`define EXE_JALR_OP   8'b00001001
+//`define EXE_JR_OP     8'b00001000
+//`define EXE_BEQ_OP    8'b01010001
+//`define EXE_BGEZ_OP   8'b01000001
+//`define EXE_BGEZAL_OP 8'b01001011
+//`define EXE_BGTZ_OP   8'b01010100
+//`define EXE_BLEZ_OP   8'b01010011
+//`define EXE_BLTZ_OP   8'b01000000
+//`define EXE_BLTZAL_OP 8'b01001010
+//`define EXE_BNE_OP    8'b01010010
 
 `define EXE_LB_OP  8'b11100000
 `define EXE_LBU_OP 8'b11100100

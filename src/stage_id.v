@@ -24,7 +24,7 @@ module stage_id (
 	output reg  [     `RegBus] opv2         ,
 	output reg  [ `RegAddrBus] reg_waddr    ,
 	output reg                 we           ,
-	output reg                 stallreq     ,
+	output wire                stallreq     ,
 	output reg                 br           ,
 	output reg  [`InstAddrBus] br_addr      ,
 	output reg  [`InstAddrBus] link_addr
@@ -46,17 +46,30 @@ module stage_id (
 	reg stallreq_for_reg1_load;
 	reg stallreq_for_reg2_load;
 	assign stallreq = stallreq_for_reg1_load || stallreq_for_reg2_load;
-	assign prev_is_load = ex_aluop == `EXE_LB_OP  || 
-                          ex_aluop == `EXE_LH_OP  ||
-                          ex_aluop == `EXE_LW_OP  ||
-                          ex_aluop == `EXE_LBU_OP ||
-                          ex_aluop == `EXE_LHU_OP;
 
+	wire prev_is_load;
+	assign prev_is_load = (ex_aluop == `EXE_LB_OP)  || 
+                          (ex_aluop == `EXE_LH_OP)  ||
+                          (ex_aluop == `EXE_LW_OP)  ||
+                          (ex_aluop == `EXE_LBU_OP) ||
+                          (ex_aluop == `EXE_LHU_OP);
+
+
+    wire[`InstAddrBus] reg1_plus_I_imm;
+    wire[`InstAddrBus] pc_plus_J_imm;
+    wire[`InstAddrBus] pc_plus_B_imm;
+    wire[`InstAddrBus] pc_plus_4;
     assign reg1_plus_I_imm = reg_data1 + {{20{I_imm[11]}}, I_imm};
-    assign pc_plus_J_imm = pc + {{12{inst[31]}}, inst[19:12], inst[20], inst[30, 21], 1'b0};
+    assign pc_plus_J_imm = pc + {{12{inst[31]}}, inst[19:12], inst[20], inst[30:21], 1'b0};
    	assign pc_plus_B_imm = pc + {{20{inst[31]}}, inst[7], inst[30:25], inst[11:8], 1'b0};
     assign pc_plus_4 = pc + 4;
 
+    wire reg1_reg2_eq;
+    wire reg1_reg2_ne;
+    wire reg1_reg2_lt;
+    wire reg1_reg2_ltu;
+    wire reg1_reg2_ge;
+    wire reg1_reg2_geu;
     assign reg1_reg2_eq = (reg_data1 == reg_data2);
     assign reg1_reg2_ne = (reg_data1 != reg_data2);
 	assign reg1_reg2_lt = ($signed(reg_data1) < $signed(reg_data2));
@@ -84,10 +97,11 @@ module stage_id (
 	
 	always @ (*) begin
 		if (rst) begin
-			`SET_INST(`EXE_NOP_OP, `EXE_RES_NOP, 1, 0, rs, 0, rt, 0, rd, 0, 0)
+			`SET_INST(`EXE_RES_NOP, `EXE_NOP_OP, 1, 0, rs, 0, rt, 0, rd, 0, 0)
 			`SET_BRANCH(0, 0, 0)
 		end else begin
 			`SET_INST(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+			`SET_BRANCH(0, 0, 0)
 			case (opcode)
 				`OP_LUI : begin
 					`SET_INST(`EXE_RES_ARITH, `EXE_ADD_OP, 1, 0, 0, 0, 0, 1, rd, ({U_imm, 12'b0}), 0)
@@ -98,10 +112,11 @@ module stage_id (
 				`OP_JAL : begin
 					`SET_INST(`EXE_RES_JUMP_BRANCH, `EXE_JAL_OP, 1, 0, 0, 0, 0, 1, rd, 0, 0)
 					`SET_BRANCH(1, pc_plus_J_imm, pc_plus_4)
+					$display("br_addr: %d", pc_plus_J_imm);
 				end
 				`OP_JALR : begin
 					`SET_INST(`EXE_RES_JUMP_BRANCH, `EXE_JALR_OP, 1, 1, rs, 0, 0, 1, rd, 0, 0)
-					`SET_BRANCH(1, re1_plus_I_imm, pc_plus_4)
+					`SET_BRANCH(1, reg1_plus_I_imm, pc_plus_4)
 				end
 				`OP_BRANCH : begin
 					case (funct3)

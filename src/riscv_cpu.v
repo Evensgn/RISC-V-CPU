@@ -30,7 +30,7 @@ module riscv_cpu (
 
 	// ID -> PC_reg
 	wire br;
-	wire br_addr;
+	wire[`InstAddrBus] br_addr;
 
 	// ID -> ID/EX
 	wire[`AluOpBus] id_aluop;
@@ -100,6 +100,7 @@ module riscv_cpu (
 		.if_pc  (pc      ),
 		.if_inst(rom_inst),
 		.stall  (stall   ),
+		.br     (br      ),
 		// output
 		.id_pc  (id_pc   ),
 		.id_inst(id_inst )

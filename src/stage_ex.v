@@ -107,7 +107,7 @@ module stage_ex (
 				reg_wdata <= arith_out;
 			end
 			`EXE_RES_JUMP_BRANCH : begin
-				$display("EXE_RES_JUMP_BRANCH");
+				$display("EXE_RES_JUMP_BRANCH: %d", link_addr);
 				reg_wdata <= link_addr;
 			end
 			default : begin

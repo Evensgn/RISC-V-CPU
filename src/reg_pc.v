@@ -22,6 +22,7 @@ module reg_pc (
 		if (ce == 0) begin
 			pc <= 0;
 		end else if (!stall[0]) begin
+			$display("br: %d, br_addr: %d", br, br_addr);
 			if (br) pc <= br_addr;
 			else pc <= pc + 4'h4;
 		end

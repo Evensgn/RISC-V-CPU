@@ -57,12 +57,12 @@ module stage_id (
    	assign pc_plus_B_imm = pc + {{20{inst[31]}}, inst[7], inst[30:25], inst[11:8], 1'b0};
     assign pc_plus_4 = pc + 4;
 
-    assign reg1_reg2_eq = reg_data1 == reg_data2;
-    assign reg1_reg2_ne = reg_data1 != reg_data2;
-	assign reg1_reg2_lt = $signed(reg_data1) < $signed(reg_data2);
-	assign reg1_reg2_ltu = reg_data1 < reg_data2;
-	assign reg1_reg2_ge = $signed(reg_data1) >= $signed(reg_data2);
-	assign reg1_reg2_geu = reg_data1 >= reg_data2;
+    assign reg1_reg2_eq = (reg_data1 == reg_data2);
+    assign reg1_reg2_ne = (reg_data1 != reg_data2);
+	assign reg1_reg2_lt = ($signed(reg_data1) < $signed(reg_data2));
+	assign reg1_reg2_ltu = (reg_data1 < reg_data2);
+	assign reg1_reg2_ge = ($signed(reg_data1) >= $signed(reg_data2));
+	assign reg1_reg2_geu = (reg_data1 >= reg_data2);
 
 	`define SET_INST(i_alusel, i_aluop, i_inst_valid, i_re1, i_reg_addr1, i_re2, i_reg_addr2, i_we, i_reg_waddr, i_imm1, i_imm2) \
 		aluop <= i_aluop; \

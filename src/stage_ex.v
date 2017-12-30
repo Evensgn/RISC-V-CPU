@@ -1,17 +1,18 @@
 `include "defines.v"
 
 module stage_ex (
-	input  wire               rst        ,
-	input  wire [  `AluOpBus] aluop      ,
-	input  wire [ `AluSelBus] alusel     ,
-	input  wire [    `RegBus] opv1       ,
-	input  wire [    `RegBus] opv2       ,
-	input  wire [`RegAddrBus] reg_waddr_i,
-	input  wire               we_i       ,
-	output reg  [`RegAddrBus] reg_waddr_o,
-	output reg                we_o       ,
-	output reg  [    `RegBus] reg_wdata  ,
-	output reg                stallreq
+	input  wire                rst        ,
+	input  wire [   `AluOpBus] aluop      ,
+	input  wire [  `AluSelBus] alusel     ,
+	input  wire [     `RegBus] opv1       ,
+	input  wire [     `RegBus] opv2       ,
+	input  wire [ `RegAddrBus] reg_waddr_i,
+	input  wire                we_i       ,
+	input  wire [`InstAddrBus] link_addr  ,
+	output reg  [ `RegAddrBus] reg_waddr_o,
+	output reg                 we_o       ,
+	output reg  [     `RegBus] reg_wdata  ,
+	output reg                 stallreq
 );
 
 	reg[`RegBus] logic_out;
@@ -104,6 +105,10 @@ module stage_ex (
 			`EXE_RES_ARITH : begin
 				$display("EXE_RES_ARITH");
 				reg_wdata <= arith_out;
+			end
+			`EXE_RES_JUMP_BRANCH : begin
+				$display("EXE_RES_JUMP_BRANCH: %d", link_addr);
+				reg_wdata <= link_addr;
 			end
 			default : begin
 				reg_wdata <= 0;

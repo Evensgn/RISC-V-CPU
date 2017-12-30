@@ -28,6 +28,10 @@ module riscv_cpu (
 	wire[`RegAddrBus] id_reg_addr1;
 	wire[`RegAddrBus] id_reg_addr2;
 
+	// ID -> PC_reg
+	wire br;
+	wire[`InstAddrBus] br_addr;
+
 	// ID -> ID/EX
 	wire[`AluOpBus] id_aluop;
 	wire[`AluSelBus] id_alusel;
@@ -35,6 +39,7 @@ module riscv_cpu (
 	wire[`RegBus] id_opv2;
 	wire id_we;
 	wire[`RegAddrBus] id_reg_waddr;
+	wire[`InstAddrBus] id_link_addr;
 
 	// ID/EX -> EX
 	wire[  `AluOpBus] ex_aluop;
@@ -43,6 +48,7 @@ module riscv_cpu (
 	wire[    `RegBus] ex_opv2;
 	wire[`RegAddrBus] ex_reg_waddr_i;
 	wire ex_we_i;
+	wire[`InstAddrBus] ex_link_addr;
 
 	// EX -> EX/MEM
 	wire[`RegAddrBus] ex_reg_waddr_o;
@@ -77,12 +83,14 @@ module riscv_cpu (
 
 	reg_pc reg_pc0 (
 		// input
-		.clk  (clk   ),
-		.rst  (rst   ),
-		.stall(stall ),
+		.clk    (clk    ),
+		.rst    (rst    ),
+		.stall  (stall  ),
+		.br     (br     ),
+		.br_addr(br_addr),
 		// output
-		.pc   (pc    ),
-		.ce   (rom_ce)
+		.pc     (pc     ),
+		.ce     (rom_ce )
 	);
 
 	reg_if_id reg_if_id0 (
@@ -92,6 +100,7 @@ module riscv_cpu (
 		.if_pc  (pc      ),
 		.if_inst(rom_inst),
 		.stall  (stall   ),
+		.br     (br      ),
 		// output
 		.id_pc  (id_pc   ),
 		.id_inst(id_inst )
@@ -123,7 +132,10 @@ module riscv_cpu (
 		.opv2         (id_opv2        ),
 		.we           (id_we          ),
 		.reg_waddr    (id_reg_waddr   ),
-		.stallreq     (stallreq_id    )
+		.stallreq     (stallreq_id    ),
+		.br           (br             ),
+		.br_addr      (br_addr        ),
+		.link_addr    (id_link_addr   )
 	);
 
 	regfile regfile0 (
@@ -152,6 +164,7 @@ module riscv_cpu (
 		.id_opv2     (id_opv2       ),
 		.id_reg_waddr(id_reg_waddr  ),
 		.id_we       (id_we         ),
+		.id_link_addr(id_link_addr  ),
 		.stall       (stall         ),
 		// output
 		.ex_aluop    (ex_aluop      ),
@@ -159,7 +172,8 @@ module riscv_cpu (
 		.ex_opv1     (ex_opv1       ),
 		.ex_opv2     (ex_opv2       ),
 		.ex_reg_waddr(ex_reg_waddr_i),
-		.ex_we       (ex_we_i       )
+		.ex_we       (ex_we_i       ),
+		.ex_link_addr(ex_link_addr  )
 	);
 
 	stage_ex stage_ex0 (
@@ -171,6 +185,7 @@ module riscv_cpu (
 		.opv2       (ex_opv2       ),
 		.reg_waddr_i(ex_reg_waddr_i),
 		.we_i       (ex_we_i       ),
+		.link_addr  (ex_link_addr  ),
 		// output
 		.reg_waddr_o(ex_reg_waddr_o),
 		.we_o       (ex_we_o       ),

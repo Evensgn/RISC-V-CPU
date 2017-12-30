@@ -70,12 +70,12 @@ module stage_id (
     wire reg1_reg2_ltu;
     wire reg1_reg2_ge;
     wire reg1_reg2_geu;
-    assign reg1_reg2_eq = (reg_data1 == reg_data2);
-    assign reg1_reg2_ne = (reg_data1 != reg_data2);
-	assign reg1_reg2_lt = ($signed(reg_data1) < $signed(reg_data2));
-	assign reg1_reg2_ltu = (reg_data1 < reg_data2);
-	assign reg1_reg2_ge = ($signed(reg_data1) >= $signed(reg_data2));
-	assign reg1_reg2_geu = (reg_data1 >= reg_data2);
+    assign reg1_reg2_eq = (opv1 == opv2);
+    assign reg1_reg2_ne = (opv1 != opv2);
+	assign reg1_reg2_lt = ($signed(opv1) < $signed(opv2));
+	assign reg1_reg2_ltu = (opv1 < opv2);
+	assign reg1_reg2_ge = ($signed(opv1) >= $signed(opv2));
+	assign reg1_reg2_geu = (opv1 >= opv2);
 
 	`define SET_INST(i_alusel, i_aluop, i_inst_valid, i_re1, i_reg_addr1, i_re2, i_reg_addr2, i_we, i_reg_waddr, i_imm1, i_imm2) \
 		aluop <= i_aluop; \

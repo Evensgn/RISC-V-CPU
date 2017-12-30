@@ -14,7 +14,7 @@ module test_bench ();
 	initial begin
 		rst = 1;
 		#185 rst = 0;
-		#1000 $stop;
+		#2000 $stop;
 	end
 
 	riscv_min_sopc riscv_min_sopc0 (

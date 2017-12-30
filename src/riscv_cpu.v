@@ -1,17 +1,24 @@
 `include "defines.v"
 
 module riscv_cpu (
-	input  wire                clk     ,
-	input  wire                rst     ,
-	input  wire [    `InstBus] rom_inst,
-	output wire [`InstAddrBus] rom_addr,
-	output wire                rom_ce
+	input  wire                clk       ,
+	input  wire                rst       ,
+	input  wire [    `InstBus] rom_inst  ,
+	input  wire [     `RegBus] mem_data_i,
+	output wire [`InstAddrBus] rom_addr  ,
+	output wire                rom_ce    ,
+	output wire                mem_we    ,
+	output wire [ `MemAddrBus] mem_addr  ,
+	output wire [         3:0] mem_sel   ,
+	output wire [     `RegBus] mem_data_o,
+	output wire                mem_ce
 );
 
 	// stall
 	wire[5:0] stall;
 	wire stallreq_id;
 	wire stallreq_ex;
+	wire stallreq_mem;
 
 	// PC_Reg -> IF/ID
 	wire[`InstAddrBus] pc;
@@ -82,11 +89,12 @@ module riscv_cpu (
 
 	ctrl ctrl0 (
 		// input
-		.rst (rst),        
-		.stallreq_id (stallreq_id),
-		.stallreq_ex (stallreq_ex),
+		.rst         (rst         ),
+		.stallreq_id (stallreq_id ),
+		.stallreq_ex (stallreq_ex ),
+		.stallreq_mem(stallreq_mem),
 		// output
-		.stall (stall)
+		.stall       (stall       )
 	);
 
 	reg_pc reg_pc0 (
@@ -238,10 +246,17 @@ module riscv_cpu (
 		.mem_addr   (mem_mem_addr   ),
 		.aluop      (mem_aluop      ),
 		.rt_data    (mem_rt_data    ),
+		.mem_data_i (mem_data_i     ),
 		// output
 		.reg_waddr_o(mem_reg_waddr_o),
 		.we_o       (mem_we_o       ),
-		.reg_wdata_o(mem_reg_wdata_o)
+		.reg_wdata_o(mem_reg_wdata_o),
+		.stallreq   (stallreq_mem   ),
+		.mem_addr_o (mem_addr_o     ),
+		.mem_we     (mem_we         ),
+		.mem_sel    (mem_sel        ),
+		.mem_data_o (mem_data_o     ),
+		.mem_ce     (mem_ce         )
 	);
 
 	reg_mem_wb reg_mem_wb0 (

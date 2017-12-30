@@ -114,6 +114,7 @@ module riscv_cpu (
 		.reg_data1    (id_reg_data1   ),
 		.reg_data2    (id_reg_data2   ),
 		
+		.ex_aluop     (ex_aluop       ),
 		.ex_we        (ex_we_o        ),
 		.ex_reg_waddr (ex_reg_waddr_o ),
 		.ex_reg_wdata (ex_reg_wdata   ),

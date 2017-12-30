@@ -4,7 +4,7 @@ module stage_mem (
 	input  wire               rst        ,
 	input  wire [`RegAddrBus] reg_waddr_i,
 	input  wire               we_i       ,
-	input  wire [    `RegBus] reg_wdata_i    ,
+	input  wire [    `RegBus] reg_wdata_i,
 	output reg  [`RegAddrBus] reg_waddr_o,
 	output reg                we_o       ,
 	output reg  [    `RegBus] reg_wdata_o

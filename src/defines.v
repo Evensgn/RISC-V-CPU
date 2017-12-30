@@ -109,46 +109,14 @@
 `define EXE_BLTU_OP 18
 `define EXE_BGEU_OP 19
 
-
-//`define EXE_ADDIU_OP 8'b01010110
-//`define EXE_CLZ_OP   8'b10110000
-//`define EXE_CLO_OP   8'b10110001
-
-//`define EXE_MULT_OP  8'b00011000
-//`define EXE_MULTU_OP 8'b00011001
-//`define EXE_MUL_OP   8'b10101001
-//`define EXE_DIV_OP   8'b00011010
-//`define EXE_DIVU_OP  8'b00011011
-
-//`define EXE_J_OP      8'b01001111
-//`define EXE_JAL_OP    8'b01010000
-//`define EXE_JALR_OP   8'b00001001
-//`define EXE_JR_OP     8'b00001000
-//`define EXE_BEQ_OP    8'b01010001
-//`define EXE_BGEZ_OP   8'b01000001
-//`define EXE_BGEZAL_OP 8'b01001011
-//`define EXE_BGTZ_OP   8'b01010100
-//`define EXE_BLEZ_OP   8'b01010011
-//`define EXE_BLTZ_OP   8'b01000000
-//`define EXE_BLTZAL_OP 8'b01001010
-//`define EXE_BNE_OP    8'b01010010
-
-`define EXE_LB_OP  8'b11100000
-`define EXE_LBU_OP 8'b11100100
-`define EXE_LH_OP  8'b11100001
-`define EXE_LHU_OP 8'b11100101
-`define EXE_LL_OP  8'b11110000
-`define EXE_LW_OP  8'b11100011
-`define EXE_LWL_OP 8'b11100010
-`define EXE_LWR_OP 8'b11100110
-`define EXE_SB_OP  8'b11101000
-`define EXE_SC_OP  8'b11111000
-`define EXE_SH_OP  8'b11101001
-`define EXE_SW_OP  8'b11101011
-`define EXE_SWL_OP 8'b11101010
-`define EXE_SWR_OP 8'b11101110
-
-//==================  Constants ================== 
+`define EXE_LB_OP  20
+`define EXE_LH_OP  21
+`define EXE_LW_OP  22
+`define EXE_LBU_OP 23
+`define EXE_LHU_OP 24
+`define EXE_SB_OP  25
+`define EXE_SH_OP  26
+`define EXE_SW_OP  27
 
 //==================  Hardware Properties ================== 
 
@@ -167,5 +135,12 @@
 // ALU
 `define AluOpBus 7:0
 `define AluSelBus 2:0
+
+// Memory
+`define MemAddrBus 31:0
+`define MemDataBus 31:0
+`define ByteBus 7:0
+`define DataMemNum 131072
+`define DataMemNumLog2 17
 
 `endif

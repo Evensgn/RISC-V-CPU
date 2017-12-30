@@ -40,6 +40,7 @@ module riscv_cpu (
 	wire id_we;
 	wire[`RegAddrBus] id_reg_waddr;
 	wire[`InstAddrBus] id_link_addr;
+	wire[`RegBus] id_mem_offset;
 
 	// ID/EX -> EX
 	wire[  `AluOpBus] ex_aluop;
@@ -49,16 +50,23 @@ module riscv_cpu (
 	wire[`RegAddrBus] ex_reg_waddr_i;
 	wire ex_we_i;
 	wire[`InstAddrBus] ex_link_addr;
+	wire[`RegBus] ex_mem_offset;
 
 	// EX -> EX/MEM
 	wire[`RegAddrBus] ex_reg_waddr_o;
 	wire ex_we_o;
 	wire[    `RegBus] ex_reg_wdata;
+	wire[`MemAddrBus] ex_mem_addr;
+	wire[`AluOpBus] ex_aluop;
+	wire[`RegBus] ex_rt_data;
 
 	// EX/MEM -> MEM
 	wire[`RegAddrBus] mem_reg_waddr_i;
 	wire mem_we_i;
 	wire[    `RegBus] mem_reg_wdata_i;
+	wire[`MemAddrBus] mem_mem_addr;
+	wire[`AluOpBus] mem_aluop;
+	wire[`RegBus] mem_rt_data;
 
 	// MEM -> MEM/WB
 	wire[`RegAddrBus] mem_reg_waddr_o;
@@ -136,7 +144,8 @@ module riscv_cpu (
 		.stallreq     (stallreq_id    ),
 		.br           (br             ),
 		.br_addr      (br_addr        ),
-		.link_addr    (id_link_addr   )
+		.link_addr    (id_link_addr   ),
+		.mem_offset   (id_mem_offset  )
 	);
 
 	regfile regfile0 (
@@ -157,24 +166,26 @@ module riscv_cpu (
 
 	reg_id_ex reg_id_ex0 (
 		// input
-		.clk         (clk           ),
-		.rst         (rst           ),
-		.id_aluop    (id_aluop      ),
-		.id_alusel   (id_alusel     ),
-		.id_opv1     (id_opv1       ),
-		.id_opv2     (id_opv2       ),
-		.id_reg_waddr(id_reg_waddr  ),
-		.id_we       (id_we         ),
-		.id_link_addr(id_link_addr  ),
-		.stall       (stall         ),
+		.clk          (clk           ),
+		.rst          (rst           ),
+		.id_aluop     (id_aluop      ),
+		.id_alusel    (id_alusel     ),
+		.id_opv1      (id_opv1       ),
+		.id_opv2      (id_opv2       ),
+		.id_reg_waddr (id_reg_waddr  ),
+		.id_we        (id_we         ),
+		.id_link_addr (id_link_addr  ),
+		.id_mem_offset(id_mem_offset ),
+		.stall        (stall         ),
 		// output
-		.ex_aluop    (ex_aluop      ),
-		.ex_alusel   (ex_alusel     ),
-		.ex_opv1     (ex_opv1       ),
-		.ex_opv2     (ex_opv2       ),
-		.ex_reg_waddr(ex_reg_waddr_i),
-		.ex_we       (ex_we_i       ),
-		.ex_link_addr(ex_link_addr  )
+		.ex_aluop     (ex_aluop      ),
+		.ex_alusel    (ex_alusel     ),
+		.ex_opv1      (ex_opv1       ),
+		.ex_opv2      (ex_opv2       ),
+		.ex_reg_waddr (ex_reg_waddr_i),
+		.ex_we        (ex_we_i       ),
+		.ex_link_addr (ex_link_addr  ),
+		.ex_mem_offset(ex_mem_offset )
 	);
 
 	stage_ex stage_ex0 (
@@ -187,11 +198,15 @@ module riscv_cpu (
 		.reg_waddr_i(ex_reg_waddr_i),
 		.we_i       (ex_we_i       ),
 		.link_addr  (ex_link_addr  ),
+		.mem_offset (ex_mem_offset ),
 		// output
 		.reg_waddr_o(ex_reg_waddr_o),
 		.we_o       (ex_we_o       ),
 		.reg_wdata  (ex_reg_wdata  ),
-		.stallreq   (stallreq_ex   )
+		.stallreq   (stallreq_ex   ),
+		.mem_addr   (ex_mem_addr   ),
+		.ex_aluop   (ex_aluop      ),
+		.ex_rt_data (ex_rt_data    )
 	);
 
 	reg_ex_mem reg_ex_mem0 (
@@ -202,10 +217,16 @@ module riscv_cpu (
 		.ex_we        (ex_we_o        ),
 		.ex_reg_wdata (ex_reg_wdata   ),
 		.stall        (stall          ),
+		.ex_mem_addr  (ex_mem_addr    ),
+		.ex_aluop     (ex_aluop       ),
+		.ex_rt_data   (ex_rt_data     ),
 		// output
 		.mem_reg_waddr(mem_reg_waddr_i),
 		.mem_we       (mem_we_i       ),
-		.mem_reg_wdata(mem_reg_wdata_o)
+		.mem_reg_wdata(mem_reg_wdata_o),
+		.mem_mem_addr (mem_mem_addr   ),
+		.mem_aluop    (mem_aluop      ),
+		.mem_rt_data  (mem_rt_data    )
 	);
 
 	stage_mem stage_mem0 (
@@ -214,6 +235,9 @@ module riscv_cpu (
 		.reg_waddr_i(mem_reg_waddr_i),
 		.we_i       (mem_we_i       ),
 		.reg_wdata_i(mem_reg_wdata_i),
+		.mem_addr   (mem_mem_addr   ),
+		.aluop      (mem_aluop      ),
+		.rt_data    (mem_rt_data    ),
 		// output
 		.reg_waddr_o(mem_reg_waddr_o),
 		.we_o       (mem_we_o       ),

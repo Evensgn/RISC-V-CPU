@@ -4,6 +4,14 @@
 | ----------- | ------- | 
 | LUI         | LUI     |
 | AUIPC       | AUIPC   |
+| JAL         | JAL     |
+| JALR        | JALR    |
+| BEQ         | BRANCH  |
+| BNE         | BRANCH  |
+| BLT         | BRANCH  |
+| BGE         | BRANCH  |
+| BLTU        | BRANCH  |
+| BGEU        | BRANCH  |
 | ADDI        | OP-IMM  |
 | SLTI        | OP-IMM  |
 | SLTIU       | OP-IMM  |

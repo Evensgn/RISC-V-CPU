@@ -5,15 +5,16 @@ module reg_if_id (
 	input  wire                rst    ,
 	input  wire [`InstAddrBus] if_pc  ,
 	input  wire [    `InstBus] if_inst,
+	input  wire [         5:0] stall  ,
 	output reg  [`InstAddrBus] id_pc  ,
 	output reg  [    `InstBus] id_inst
 );
 
 	always @ (posedge clk) begin
-		if (rst) begin
+		if (rst || (stall[1] && !stall[2])) begin
 			id_pc   <= 0;
 			id_inst <= 0;
-		end else begin
+		end else if (!stall[1]) begin
 			id_pc   <= if_pc;
 			id_inst <= if_inst;
 		end

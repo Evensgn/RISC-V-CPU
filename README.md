@@ -4,6 +4,6 @@ Zhou Fan (@Evensgn)
 
 This is a course project of Computer Architecture, ACM Class @ SJTU.
 
-![test-bench-wave](doc/test-bench-wave.jpg)
+![test-bench-wave](doc/test-bench-wave.png)
 
 My project report is [here](doc/project-report.md).

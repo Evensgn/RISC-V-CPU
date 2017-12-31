@@ -12,6 +12,14 @@
 | BGE         | BRANCH  |
 | BLTU        | BRANCH  |
 | BGEU        | BRANCH  |
+| LB          | LOAD    |
+| LH          | LOAD    |
+| LW          | LOAD    |
+| LBU         | LOAD    |
+| LHU         | LOAD    |
+| SB          | STORE   |
+| SH          | STORE   |
+| SW          | STORE   |
 | ADDI        | OP-IMM  |
 | SLTI        | OP-IMM  |
 | SLTIU       | OP-IMM  |

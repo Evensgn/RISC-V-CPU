@@ -93,10 +93,10 @@ module stage_id (
 		mem_offset <= i_mem_offset;
 
 	`define SET_BRANCH(i_br, i_br_addr, i_link_addr) \
-		br <= i_br; \
-		br_addr <= i_br_addr; \
-		link_addr <= i_link_addr;
-	
+	br <= i_br; \
+	br_addr <= i_br_addr; \
+	link_addr <= i_link_addr;
+
 	always @ (*) begin
 		if (rst) begin
 			`SET_INST(`EXE_RES_NOP, `EXE_NOP_OP, 1, 0, rs, 0, rt, 0, rd, 0, 0, 0)
@@ -274,7 +274,7 @@ module stage_id (
 				end
 				`OP_MISC_MEM : begin
 				end
-				default : begin
+				default      : begin
 				end
 			endcase // op
 		end // end else

@@ -25,6 +25,7 @@ module stage_ex (
 	reg[`RegBus] logic_out;
 	reg[`RegBus] shift_out;
 	reg[`RegBus] arith_out;
+	reg[`RegBus] mem_out;
 
 	// EXE_RES_LOGIC
 	always @ (*) begin

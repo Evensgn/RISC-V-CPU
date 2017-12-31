@@ -64,7 +64,7 @@ module riscv_cpu (
 	wire ex_we_o;
 	wire[    `RegBus] ex_reg_wdata;
 	wire[`MemAddrBus] ex_mem_addr;
-	wire[`AluOpBus] ex_aluop;
+	wire[`AluOpBus] ex_aluop_o;
 	wire[`RegBus] ex_rt_data;
 
 	// EX/MEM -> MEM
@@ -213,8 +213,8 @@ module riscv_cpu (
 		.reg_wdata  (ex_reg_wdata  ),
 		.stallreq   (stallreq_ex   ),
 		.mem_addr   (ex_mem_addr   ),
-		.ex_aluop   (ex_aluop      ),
-		.ex_rt_data (ex_rt_data    )
+		.ex_aluop   (ex_aluop_o    ),
+		.rt_data    (ex_rt_data    )
 	);
 
 	reg_ex_mem reg_ex_mem0 (
@@ -226,12 +226,12 @@ module riscv_cpu (
 		.ex_reg_wdata (ex_reg_wdata   ),
 		.stall        (stall          ),
 		.ex_mem_addr  (ex_mem_addr    ),
-		.ex_aluop     (ex_aluop       ),
+		.ex_aluop     (ex_aluop_o     ),
 		.ex_rt_data   (ex_rt_data     ),
 		// output
 		.mem_reg_waddr(mem_reg_waddr_i),
 		.mem_we       (mem_we_i       ),
-		.mem_reg_wdata(mem_reg_wdata_o),
+		.mem_reg_wdata(mem_reg_wdata_i),
 		.mem_mem_addr (mem_mem_addr   ),
 		.mem_aluop    (mem_aluop      ),
 		.mem_rt_data  (mem_rt_data    )
@@ -243,7 +243,7 @@ module riscv_cpu (
 		.reg_waddr_i(mem_reg_waddr_i),
 		.we_i       (mem_we_i       ),
 		.reg_wdata_i(mem_reg_wdata_i),
-		.mem_addr   (mem_mem_addr   ),
+		.mem_addr_i (mem_mem_addr   ),
 		.aluop      (mem_aluop      ),
 		.rt_data    (mem_rt_data    ),
 		.mem_data_i (mem_data_i     ),
@@ -252,7 +252,7 @@ module riscv_cpu (
 		.we_o       (mem_we_o       ),
 		.reg_wdata_o(mem_reg_wdata_o),
 		.stallreq   (stallreq_mem   ),
-		.mem_addr_o (mem_addr_o     ),
+		.mem_addr_o (mem_addr       ),
 		.mem_we     (mem_we         ),
 		.mem_sel    (mem_sel        ),
 		.mem_data_o (mem_data_o     ),

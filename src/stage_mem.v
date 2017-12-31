@@ -17,7 +17,7 @@ module stage_mem (
 	output reg  [        3:0] mem_sel    ,
 	output reg  [    `RegBus] mem_data_o ,
 	output reg                mem_ce     ,
-	output reg                stall_req
+	output reg                stallreq
 );
 
 	`define SET_MEM_INST(i_mem_ce, i_mem_we, i_mem_addr_o, i_mem_data_o) \
@@ -27,7 +27,7 @@ module stage_mem (
 		mem_data_o <= i_mem_data_o;
 
 	always @ (*) begin
-		stall_req <= 0;
+		stallreq <= 0;
 		if(rst) begin
 			reg_waddr_o <= 0;
 			we_o        <= 0;
@@ -46,7 +46,9 @@ module stage_mem (
 					mem_sel <= 4'b0000;
 					case (mem_addr_i[1:0])
 						2'b00   : reg_wdata_o <= {{24{mem_data_i[7]}}, mem_data_i[7:0]};
-						2'b01   : reg_wdata_o <= {{24{mem_data_i[15]}}, mem_data_i[15:8]};
+						2'b01   : begin
+							reg_wdata_o <= {{24{mem_data_i[15]}}, mem_data_i[15:8]};
+						end 
 						2'b10   : reg_wdata_o <= {{24{mem_data_i[23]}}, mem_data_i[23:16]};
 						2'b11   : reg_wdata_o <= {{24{mem_data_i[31]}}, mem_data_i[31:24]};
 						default : reg_wdata_o <= 0;
@@ -65,7 +67,7 @@ module stage_mem (
 					`SET_MEM_INST(1, 0, mem_addr_i, 0)
 					mem_sel <= 4'b0000;
 					case (mem_addr_i[1:0])
-						2'b00   : reg_wdata_o <= mem_data_i[15:0];
+						2'b00   : reg_wdata_o <= mem_data_i;
 						default : reg_wdata_o <= 0;
 					endcase // mem_addr_i[1:0]
 				end
@@ -90,7 +92,7 @@ module stage_mem (
 					endcase // mem_addr_i[1:0]
 				end
 				`EXE_SB_OP : begin
-					`SET_MEM_INST(1, 1, mem_addr_i, {4{mem_data_i[7:0]}})
+					`SET_MEM_INST(1, 1, mem_addr_i, {4{rt_data[7:0]}})
 					reg_wdata_o <= 0;
 					case (mem_addr_i[1:0])
 						2'b00   : mem_sel <= 4'b0001;
@@ -101,7 +103,7 @@ module stage_mem (
 					endcase // mem_addr_i[1:0]
 				end
 				`EXE_SH_OP : begin
-					`SET_MEM_INST(1, 1, mem_addr_i, {2{mem_data_i[15:0]}})
+					`SET_MEM_INST(1, 1, mem_addr_i, {2{rt_data[15:0]}})
 					reg_wdata_o <= 0;
 					case (mem_addr_i[1:0])
 						2'b00   : mem_sel <= 4'b0011;
@@ -110,7 +112,7 @@ module stage_mem (
 					endcase // mem_addr_i[1:0]
 				end
 				`EXE_SW_OP : begin
-					`SET_MEM_INST(1, 1, mem_addr_i, mem_data_i)
+					`SET_MEM_INST(1, 1, mem_addr_i, rt_data)
 					reg_wdata_o <= 0;
 					case (mem_addr_i[1:0])
 						2'b00   : mem_sel <= 4'b1111;

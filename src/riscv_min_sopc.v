@@ -16,12 +16,18 @@ module riscv_min_sopc (
 
 	riscv_cpu riscv_cpu0 (
 		// input
-		.clk     (clk     ),
-		.rst     (rst     ),
-		.rom_inst(rom_inst),
+		.clk       (clk           ),
+		.rst       (rst           ),
+		.rom_inst  (rom_inst      ),
+		.mem_data_i(mem_data_read ),
 		// output
-		.rom_addr(rom_addr),
-		.rom_ce  (rom_ce  )
+		.rom_addr  (rom_addr      ),
+		.rom_ce    (rom_ce        ),
+		.mem_ce    (mem_ce        ),
+		.mem_addr  (mem_addr      ),
+		.mem_data_o(mem_data_write),
+		.mem_sel   (mem_sel       ),
+		.mem_we    (mem_we        )
 	);
 
 	inst_rom inst_rom0 (

@@ -31,3 +31,13 @@ es_j2:
 	ori x12, x0, 0x5ef # x12 = 0x5ef
 	ori x13, x0, 0x123 # x13 = 0x123
 	# j es_j1 # jump to es_j1, which makes a infinite loop
+	sb x11, 2(x13) # store 0x48 to mem:0x125
+	lb x14, 2(x13) # x14 = 0x48
+	sb x12, 1(x13) # store 0xef to mem:0x124
+	lh x14, 1(x13) # x14 = 0x48ef
+	add x15, x14, x0 # x15 = 0x48ef
+	sh x5, 3(x13) # store 0x0343 to mem:0x126
+	lw x15, 1(x13) # x15 = 0x034348ef
+	add x17, x7, x15 # x17 = 0x034348f0
+	sw x11, 5(x13) # store 0x21c43048 to mem:0x128
+	lw x16, 5(x13) # x16 = 0x21c43048

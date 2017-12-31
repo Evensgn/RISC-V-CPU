@@ -285,7 +285,7 @@ module stage_id (
 		if(rst) begin \
 			opv <= 0; \
 		end else if (re && prev_is_load && (ex_reg_waddr == reg_addr)) begin \
-			stallreq = 1; \
+			stallreq <= 1; \
 		end else if (re && ex_we && (ex_reg_waddr == reg_addr)) begin \
 			opv <= ex_reg_wdata; \
 		end else if (re && mem_we && (mem_reg_waddr == reg_addr)) begin \

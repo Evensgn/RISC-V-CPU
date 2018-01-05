@@ -30,7 +30,7 @@ es_j1:
 es_j2:
 	ori x12, x0, 0x5ef # x12 = 0x5ef
 	ori x13, x0, 0x123 # x13 = 0x123
-	# j es_j1 # jump to es_j1, which makes a infinite loop
+	# j es_j1 # jump to es_j1, which makes an infinite loop
 	sb x11, 2(x13) # store 0x48 to mem:0x125
 	lb x14, 2(x13) # x14 = 0x48
 	sb x12, 1(x13) # store 0xef to mem:0x124

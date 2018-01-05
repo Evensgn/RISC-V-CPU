@@ -4,7 +4,8 @@
 
 由于体系结构课程的 CPU 大作业规定使用 RISC-V 指令集，因此要用到 RISC-V 的 GNU 工具链来进行汇编，最近班上的一些同学就在下载安装，还有同学问我应该如何使用这个工具链。经过上个周末的折腾，我大概可以整理一个非常非官方的 "Manual" 给还没有装好工具链的同学简要介绍一下这个工具链的安装和使用（仅仅是面向此次 CPU 大作业的使用）。
 
-安装
+## 安装
+
 首先我们要从 git 仓库将工具链的源码 clone 下来，请注意不要漏掉 `--rescursive` 的选项，否则不会完整地获取所需的子模块代码。
 ```
 $ git clone --recursive https://github.com/riscv/riscv-gnu-toolchain
@@ -44,7 +45,9 @@ $ /opt/riscv/bin/riscv32-unknown-elf-
 ```
 $ PATH=$PATH:/opt/riscv/bin/
 ```
-使用
+ 
+## 使用
+
 安装好工具链之后，我们可以使用包括但不限于下面的程序了。
 
 * `riscv32-unknown-elf-as`
@@ -108,7 +111,9 @@ $ python bin2ascii.py sample.bin sample.data
 13f28156
 9362a068
 ```
-自动化
+
+## 自动化
+
 至此，我们已经可以顺利地将一个汇编程序转换成二进制机器码了。但是这个过程有多个步骤，每次都手动操作效率不高。不妨用功能强大的 `make` 将这个过程自动化。
 
 新建一个目录，在目录里创建一个叫做 `Makefile` 的文件，我写的 Makefile 是这样子的：

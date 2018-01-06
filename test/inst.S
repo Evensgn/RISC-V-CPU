@@ -21,7 +21,7 @@ _start:
 	lui x10, 0x45b27 # x10 = 0x45b27000
 	auipc x11, 0x21c43 # x11 = 0x21c43048
 es_j1:
-	bge x10, x11, es_j2 # jump to es_j2 & x1 = 80 = 0x50
+	bge x10, x11, es_j2 # jump to es_j2
 	ori x12, x0, 0x456 # x12 = 0x456
 	ori x13, x0, 0x2bc # x13 = 0x2bc
 	nop

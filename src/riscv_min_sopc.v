@@ -1,3 +1,5 @@
+`timescale 1ns/1ps
+
 module riscv_min_sopc (
 	input wire clk,
 	input wire rst

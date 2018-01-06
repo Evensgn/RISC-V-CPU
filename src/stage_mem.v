@@ -15,6 +15,7 @@ module stage_mem (
 	output reg                we_o       ,
 	output reg  [    `RegBus] reg_wdata_o,
 	output reg  [`MemAddrBus] mem_addr_o ,
+	output reg                mem_re     ,
 	output reg                mem_we     ,
 	output reg  [        3:0] mem_sel    ,
 	output reg  [    `RegBus] mem_data_o ,
@@ -23,16 +24,17 @@ module stage_mem (
 
 	reg mem_taking;
 
-	`define SET_MEM_INST(i_stallreq, i_mem_taking, i_mem_we, i_mem_addr_o, i_mem_data_o) \
+	`define SET_MEM_INST(i_stallreq, i_mem_taking, i_mem_re, i_mem_we, i_mem_addr_o, i_mem_data_o) \
 		stallreq <= i_stallreq; \
 		mem_taking <= i_mem_taking; \
+		mem_re <= i_mem_re; \
 		mem_we <= i_mem_we; \
 		mem_addr_o <= i_mem_addr_o; \
 		mem_data_o <= i_mem_data_o;
 
 	always @ (*) begin
 		if(rst) begin
-			`SET_MEM_INST(0, 0, 0, 0, 0)
+			`SET_MEM_INST(0, 0, 0, 0, 0, 0)
 			reg_waddr_o <= 0;
 			we_o        <= 0;
 			reg_wdata_o <= 0;
@@ -42,11 +44,11 @@ module stage_mem (
 			we_o        <= we_i;
 			case (aluop)
 				`EXE_LB_OP, `EXE_LH_OP, `EXE_LW_OP, `EXE_LBU_OP, `EXE_LHU_OP : begin
-					`SET_MEM_INST(1, 1, 0, {mem_addr_i[31:2], 2'b0}, 0)
+					`SET_MEM_INST(1, 1, 1, 0, {mem_addr_i[31:2], 2'b0}, 0)
 					mem_sel <= 4'b0000;
 				end
 				`EXE_SB_OP : begin
-					`SET_MEM_INST(0, 0, 1, mem_addr_i, {4{rt_data[7:0]}})
+					`SET_MEM_INST(0, 0, 0, 1, mem_addr_i, {4{rt_data[7:0]}})
 					reg_wdata_o <= 0;
 					case (mem_addr_i[1:0])
 						2'b00   : mem_sel <= 4'b0001;
@@ -57,7 +59,7 @@ module stage_mem (
 					endcase // mem_addr_i[1:0]
 				end
 				`EXE_SH_OP : begin
-					`SET_MEM_INST(0, 0, 1, mem_addr_i, {2{rt_data[15:0]}})
+					`SET_MEM_INST(0, 0, 0, 1, mem_addr_i, {2{rt_data[15:0]}})
 					reg_wdata_o <= 0;
 					case (mem_addr_i[1:0])
 						2'b00   : mem_sel <= 4'b0011;
@@ -66,7 +68,7 @@ module stage_mem (
 					endcase // mem_addr_i[1:0]
 				end
 				`EXE_SW_OP : begin
-					`SET_MEM_INST(0, 0, 1, mem_addr_i, rt_data)
+					`SET_MEM_INST(0, 0, 0, 1, mem_addr_i, rt_data)
 					reg_wdata_o <= 0;
 					case (mem_addr_i[1:0])
 						2'b00   : mem_sel <= 4'b1111;
@@ -76,7 +78,7 @@ module stage_mem (
 				default : begin
 					stallreq    <= 0;
 					mem_taking  <= 0;
-					`SET_MEM_INST(0, 0, 0, 0, 0)
+					`SET_MEM_INST(0, 0, 0, 0, 0, 0)
 					mem_sel     <= 4'b0000;
 					reg_wdata_o <= reg_wdata_i;
 				end

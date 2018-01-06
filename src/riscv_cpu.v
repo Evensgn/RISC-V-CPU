@@ -346,17 +346,19 @@ module riscv_cpu (
 		.mem_addr_i (mem_mem_addr   ),
 		.aluop      (mem_aluop      ),
 		.rt_data    (mem_rt_data    ),
-		.mem_data_i (mem_data_i     ),
+		.mem_data_i (dcache_r_data  ),
+		.mem_busy   (dcache_busy    ),
+		.mem_done   (dcache_donea   ),
 		// output
 		.reg_waddr_o(mem_reg_waddr_o),
 		.we_o       (mem_we_o       ),
 		.reg_wdata_o(mem_reg_wdata_o),
 		.stallreq   (stallreq_mem   ),
-		.mem_addr_o (mem_addr       ),
-		.mem_we     (mem_we         ),
-		.mem_sel    (mem_sel        ),
-		.mem_data_o (mem_data_o     ),
-		.mem_ce     (mem_ce         )
+		.mem_addr_o (dcache_addr    ),
+		.mem_re     (dcache_rwe[0]  ),
+		.mem_we     (dcache_rwe[1]  ),
+		.mem_sel    (dcache_sel     ),
+		.mem_data_o (dcache_w_data  )
 	);
 
 	reg_mem_wb reg_mem_wb0 (

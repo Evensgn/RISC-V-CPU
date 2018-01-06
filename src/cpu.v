@@ -32,7 +32,7 @@ module cpu (
 	wire       UART_sendable  ;
 	wire       UART_receivable;
 
-	uart_comm #(.BAUDRATE(5000000/*115200*/), .CLOCKRATE(66667000)) UART (
+	uart_trans #(.BAUDRATE(5000000/*115200*/), .CLOCKRATE(66667000)) uart_trans0 (
 		clk, rst,
 		UART_send_flag, UART_send_data,
 		UART_recv_flag, UART_recv_data,
@@ -53,7 +53,7 @@ module cpu (
 	wire                   COMM_readable    [CHANNEL-1:0];
 	wire                   COMM_writable    [CHANNEL-1:0];
 
-	multchan_comm #(.MESSAGE_BIT(MESSAGE_BIT), .CHANNEL_BIT(CHANNEL_BIT)) COMM (
+	multichan_trans #(.MESSAGE_BIT(MESSAGE_BIT), .CHANNEL_BIT(CHANNEL_BIT)) multichan_trans0 (
 		clk, rst,
 		UART_send_flag, UART_send_data,
 		UART_recv_flag, UART_recv_data,
@@ -74,7 +74,7 @@ module cpu (
 	wire [     1:0] MEM_busy      ;
 	wire [     1:0] MEM_done      ;
 
-	memory_controller MEM_CTRL (
+	mem_crtl mem_ctrl0 (
 		clk, rst,
 		COMM_write_flag[0], COMM_write_data[0], COMM_write_length[0],
 		COMM_read_flag[0], COMM_read_data[0], COMM_read_length[0],

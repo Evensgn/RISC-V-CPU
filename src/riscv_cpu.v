@@ -3,27 +3,109 @@
 `include "defines.v"
 
 module riscv_cpu (
-	input  wire                clk       ,
-	input  wire                rst       ,
-	input  wire [    `InstBus] rom_inst  ,
-	input  wire [     `RegBus] mem_data_i,
-	output wire [`InstAddrBus] rom_addr  ,
-	output wire                rom_ce    ,
-	output wire                mem_we    ,
-	output wire [ `MemAddrBus] mem_addr  ,
-	output wire [         3:0] mem_sel   ,
-	output wire [     `RegBus] mem_data_o,
-	output wire                mem_ce
+	input  wire               clk       ,
+	input  wire               rst       ,
+	input  wire [    `RegBus] mem_data_i,
+	input  wire               mem_busy_i,
+	input  wire               mem_done_i,
+	output wire [        3:0] mem_rwe_o ,
+	output wire [`MemAddrBus] mem_addr_o,
+	output wire [        7:0] mem_sel_o ,
+	output wire [    `RegBus] mem_data_o
 );
+
+	// I-Cache
+	wire [        1:0] icache_rwe       ;
+	wire [`MemAddrBus] icache_addr      ;
+	wire [`MemDataBus] icache_r_data    ;
+	wire [`MemDataBus] icache_w_data    ;
+	wire [        3:0] icache_sel       ;
+	wire               icache_busy      ;
+	wire               icache_done      ;
+	wire               icache_flush_flag;
+	wire [`MemAddrBus] icache_flush_addr;
+
+	assign icache_w_data = 0;
+	assign icache_sel = 4'b0000;
+	assign icache_rwe[1] = 1'b0;
+
+	// if not sync
+	assign icache_flush_flag = 0;
+	assign icache_flush_addr = 0;
+
+	Cache #(.INDEX_BIT(5), .NASSOC(2)) icache0 (
+		.clk           (clk              ),
+		.rst           (rst              ),
+		// with cpu core
+		.rw_flag_      (icache_rwe       ),
+		.addr_         (icache_addr      ),
+		.read_data     (icache_r_data    ),
+		.write_data_   (icache_w_data    ),
+		.write_mask_   (icache_sel       ),
+		.busy          (icache_busy      ),
+		.done          (icache_done      ),
+		.flush_flag    (icache_flush_flag),
+		.flush_addr    (icache_flush_addr),
+		// with memory
+		.mem_rw_flag   (mem_rwe_o[3:2]   ),
+		.mem_addr      (mem_addr_o[63:32]),
+		.mem_read_data (mem_data_i[63:32]),
+		.mem_write_data(mem_data_o[63:32]),
+		.mem_write_mask(mem_sel_o[7:4]   ),
+		.mem_busy      (mem_busy_i[1]    ),
+		.mem_done      (mem_done_i[1]    )
+	);
+
+	// D-Cache
+	wire [        1:0] dcache_rwe       ;
+	wire [`MemAddrBus] dcache_addr      ;
+	wire [`MemDataBus] dcache_r_data    ;
+	wire [`MemDataBus] dcache_w_data    ;
+	wire [        3:0] dcache_sel       ;
+	wire               dcache_busy      ;
+	wire               dcache_done      ;
+	wire               dcache_flush_flag;
+	wire [`MemAddrBus] dcache_flush_addr;
+
+	assign dcache_flush_flag = 0;
+	assign dcache_flush_addr = 0;
+
+	Cache #(.INDEX_BIT(2), .NASSOC(4)) icache0 (
+		.clk           (clk              ),
+		.rst           (rst              ),
+		// with cpu core
+		.rw_flag_      (dcache_rwe       ),
+		.addr_         (dcache_addr      ),
+		.read_data     (dcache_r_data    ),
+		.write_data_   (dcache_w_data    ),
+		.write_mask_   (dcache_sel       ),
+		.busy          (dcache_busy      ),
+		.done          (dcache_done      ),
+		.flush_flag    (dcache_flush_flag),
+		.flush_addr    (dcache_flush_addr),
+		// with memory
+		.mem_rw_flag   (mem_rwe_o[1:0]   ),
+		.mem_addr      (mem_addr_o[31:0] ),
+		.mem_read_data (mem_data_i[31:0] ),
+		.mem_write_data(mem_data_o[31:0] ),
+		.mem_write_mask(mem_sel_o[3:0]   ),
+		.mem_busy      (mem_busy_i[0]    ),
+		.mem_done      (mem_done_i[0]    )
+	);
 
 	// stall
 	wire[5:0] stall;
+	wire stallreq_if;
 	wire stallreq_id;
 	wire stallreq_ex;
 	wire stallreq_mem;
 
 	// PC_Reg -> IF/ID
 	wire[`InstAddrBus] pc;
+
+	// IF -> IF/ID
+	wire[`MemAddrBus] if_pc;
+	wire[`InstBus] if_inst;
 
 	// IF/ID -> ID
 	wire[`InstAddrBus] id_pc;
@@ -92,6 +174,7 @@ module riscv_cpu (
 	ctrl ctrl0 (
 		// input
 		.rst         (rst         ),
+		.stallreq_if (stallreq_if ),
 		.stallreq_id (stallreq_id ),
 		.stallreq_ex (stallreq_ex ),
 		.stallreq_mem(stallreq_mem),
@@ -111,17 +194,32 @@ module riscv_cpu (
 		.ce     (rom_ce )
 	);
 
+	stage_if stage_if0 (
+		// input
+		.rst       (rst          ),
+		.pc_i      (pc           ),
+		.mem_data_i(icache_r_data),
+		.mem_busy  (icache_busy  ),
+		.mem_done  (icache_done  ),
+		// output
+		.mem_re    (icache_rwe[0]),
+		.mem_addr_o(icache_addr  ),
+		.pc_o      (if_pc        ),
+		.inst_o    (if_inst      ),
+		.stallreq  (stallreq_if  )
+	);
+
 	reg_if_id reg_if_id0 (
 		// input
-		.clk    (clk     ),
-		.rst    (rst     ),
-		.if_pc  (pc      ),
-		.if_inst(rom_inst),
-		.stall  (stall   ),
-		.br     (br      ),
+		.clk    (clk    ),
+		.rst    (rst    ),
+		.if_pc  (if_pc  ),
+		.if_inst(if_inst),
+		.stall  (stall  ),
+		.br     (br     ),
 		// output
-		.id_pc  (id_pc   ),
-		.id_inst(id_inst )
+		.id_pc  (id_pc  ),
+		.id_inst(id_inst)
 	);
 
 	stage_id stage_id0 (

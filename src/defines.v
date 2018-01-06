@@ -138,6 +138,7 @@
 
 // Memory
 `define MemAddrBus 31:0
+`define MemAddrWidth 32
 `define MemDataBus 31:0
 `define ByteBus 7:0
 `define DataMemNum 131072

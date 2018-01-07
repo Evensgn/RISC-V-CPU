@@ -28,8 +28,8 @@ module sim_memory (
 	
 	wire _trash, _trash2;
 	
-	reg [7:0] memory[2047:0];
-	reg [7:0] memory_stack[2047:0];
+	reg [7:0] memory[1000000:0];
+	reg [7:0] memory_stack[1000000:0];
 	
 	integer i;
 	initial begin
@@ -37,7 +37,7 @@ module sim_memory (
 			memory[i] = 0;
 			memory_stack[i] = 0;
 		end
-		$readmemh("D:/Files/Progs/RISC-V-CPU/test/sample.data", memory);
+		$readmemh("D:/Files/Progs/RISC-V-CPU/test/example.data", memory);
 	end
 	
 	function [31:0] getDWORD;

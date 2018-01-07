@@ -3,15 +3,15 @@
 `include "defines.v"
 
 module riscv_cpu (
-	input  wire               clk       ,
-	input  wire               rst       ,
-	input  wire [    `RegBus] mem_data_i,
-	input  wire [        1:0] mem_busy_i,
-	input  wire [        1:0] mem_done_i,
-	output wire [        3:0] mem_rwe_o ,
-	output wire [`MemAddrBus] mem_addr_o,
-	output wire [        7:0] mem_sel_o ,
-	output wire [    `RegBus] mem_data_o
+	input  wire                       clk       ,
+	input  wire                       rst       ,
+	input  wire [2*`MemDataWidth-1:0] mem_data_i,
+	input  wire [                1:0] mem_busy_i,
+	input  wire [                1:0] mem_done_i,
+	output wire [                3:0] mem_rwe_o ,
+	output wire [2*`MemAddrWidth-1:0] mem_addr_o,
+	output wire [                7:0] mem_sel_o ,
+	output wire [2*`MemDataWidth-1:0] mem_data_o
 );
 
 	// I-Cache

@@ -19,7 +19,7 @@ module sim_cpu();
 	initial begin
 		rst = 1;
 		#1000 rst = 0;
-		#100000 $stop;
+		#10000000 $stop;
 	end
 
 endmodule

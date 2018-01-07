@@ -3,20 +3,23 @@
 `timescale 1ns / 1ps
 
 module sim_cpu();
-	reg CLK;
-	reg RST;
+	reg  clk;
+	reg  rst;
+	wire button = ~rst;
 	wire Rx, Tx;
-	
-	cpu CPU(CLK, RST, Tx, Rx);
-	sim_memory sm(CLK, RST, Rx, Tx);
-	
+
+	cpu cpu0(clk,button,Tx,Rx);
+	sim_memory sim_memory0(clk,rst,Rx,Tx);
+
 	initial begin
-		CLK = 0;
-		RST = 0;
-		RST = #1 1;
-		repeat(1000) #1 CLK = !CLK;
-		RST = 0;
-		forever #1 CLK = !CLK;
+		clk = 0;
+		forever #10 clk = ~clk;
 	end
-	
+
+	initial begin
+		rst = 1;
+		#1000 rst = 0;
+		#100000 $stop;
+	end
+
 endmodule

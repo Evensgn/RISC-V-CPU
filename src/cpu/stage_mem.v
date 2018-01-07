@@ -23,6 +23,9 @@ module stage_mem (
 );
 
 	reg mem_taking;
+	initial begin
+		mem_taking = 0;
+	end
 
 	`define SET_MEM_INST(i_stallreq, i_mem_taking, i_mem_re, i_mem_we, i_mem_addr_o, i_mem_data_o) \
 		stallreq <= i_stallreq; \

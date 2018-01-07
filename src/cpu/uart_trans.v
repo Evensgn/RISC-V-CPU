@@ -1,8 +1,8 @@
 // This file is based on Zhekai Zhang's code
 
 module uart_trans #(
-	parameter BAUDRATE  = 9600     ,
-	parameter CLOCKRATE = 100000000
+	parameter BAUDRATE  = 10000  ,
+	parameter CLOCKRATE = 10000000
 ) (
 	input            CLK       ,
 	input            RST       ,

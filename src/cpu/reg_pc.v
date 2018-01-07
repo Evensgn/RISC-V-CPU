@@ -6,22 +6,15 @@ module reg_pc (
 	input  wire [         5:0] stall  ,
 	input  wire                br     ,
 	input  wire [`InstAddrBus] br_addr,
-	output reg  [`InstAddrBus] pc     ,
-	output reg                 ce
+	output reg  [`InstAddrBus] pc
 );
 
 	always @ (posedge clk) begin
-		if (rst == 1) begin
-			ce <= 0;
-		end else begin
-			ce <= 1;
-		end
-	end
-
-	always @ (posedge clk) begin
-		if (ce == 0) begin
+		if (rst) begin
+			$display("PC: not good");
 			pc <= 0;
 		end else if (!stall[0]) begin
+			$display("PC: oh?");
 			if (br) pc <= br_addr;
 			else pc <= pc + 4'h4;
 		end

@@ -6,8 +6,8 @@ module riscv_cpu (
 	input  wire               clk       ,
 	input  wire               rst       ,
 	input  wire [    `RegBus] mem_data_i,
-	input  wire               mem_busy_i,
-	input  wire               mem_done_i,
+	input  wire [        1:0] mem_busy_i,
+	input  wire [        1:0] mem_done_i,
 	output wire [        3:0] mem_rwe_o ,
 	output wire [`MemAddrBus] mem_addr_o,
 	output wire [        7:0] mem_sel_o ,
@@ -33,7 +33,7 @@ module riscv_cpu (
 	assign icache_flush_flag = 0;
 	assign icache_flush_addr = 0;
 
-	Cache #(.INDEX_BIT(5), .NASSOC(2)) icache0 (
+	cache #(.INDEX_BIT(5), .NASSOC(2)) icache0 (
 		.clk           (clk              ),
 		.rst           (rst              ),
 		// with cpu core
@@ -70,7 +70,7 @@ module riscv_cpu (
 	assign dcache_flush_flag = 0;
 	assign dcache_flush_addr = 0;
 
-	Cache #(.INDEX_BIT(2), .NASSOC(4)) icache0 (
+	cache #(.INDEX_BIT(2), .NASSOC(4)) dcache0 (
 		.clk           (clk              ),
 		.rst           (rst              ),
 		// with cpu core
@@ -100,7 +100,7 @@ module riscv_cpu (
 	wire stallreq_ex;
 	wire stallreq_mem;
 
-	// PC_Reg -> IF/ID
+	// PC_Reg -> IF
 	wire[`InstAddrBus] pc;
 
 	// IF -> IF/ID
@@ -169,8 +169,6 @@ module riscv_cpu (
 	wire wb_we;
 	wire[    `RegBus] wb_reg_wdata;
 
-	assign rom_addr = pc;
-
 	ctrl ctrl0 (
 		// input
 		.rst         (rst         ),
@@ -190,8 +188,7 @@ module riscv_cpu (
 		.br     (br     ),
 		.br_addr(br_addr),
 		// output
-		.pc     (pc     ),
-		.ce     (rom_ce )
+		.pc     (pc     )
 	);
 
 	stage_if stage_if0 (

@@ -13,15 +13,15 @@ module cpu (
 	reg rst_delay;
 
 	wire clk;
-	clk_wiz_0 clk(clk, 1'b0, EXCLK);
+	clk_wiz_0 clk_wiz_0_0(.clk_out1(clk), .reset(0), .clk_in1(EXCLK));
 
-	always @(posedge rst or posedge button) begin
-		if(button) begin
+	always @ (posedge clk or negedge button) begin
+		if (!button) begin
 			rst       <= 1;
 			rst_delay <= 1;
 		end else begin
 			rst_delay <= 0;
-			rst       <= RST_delay;
+			rst       <= rst_delay;
 		end
 	end
 
@@ -32,7 +32,7 @@ module cpu (
 	wire       UART_sendable  ;
 	wire       UART_receivable;
 
-	uart_trans #(.BAUDRATE(5000000/*115200*/), .CLOCKRATE(66667000)) uart_trans0 (
+	uart_trans uart_trans0 (
 		clk, rst,
 		UART_send_flag, UART_send_data,
 		UART_recv_flag, UART_recv_data,
@@ -66,36 +66,36 @@ module cpu (
 		{COMM_writable[1], COMM_writable[0]}
 	);
 
-	wire [ 2*2-1:0] MEM_rw_flag   ;
-	wire [2*32-1:0] MEM_addr      ;
-	wire [2*32-1:0] MEM_read_data ;
-	wire [2*32-1:0] MEM_write_data;
-	wire [ 2*4-1:0] MEM_write_mask;
-	wire [     1:0] MEM_busy      ;
-	wire [     1:0] MEM_done      ;
+	wire [ 2*2-1:0] mem_rwe   ;
+	wire [2*32-1:0] mem_addr  ;
+	wire [2*32-1:0] mem_r_data;
+	wire [2*32-1:0] mem_w_data;
+	wire [ 2*4-1:0] mem_sel   ;
+	wire [     1:0] mem_busy  ;
+	wire [     1:0] mem_done  ;
 
-	mem_crtl mem_ctrl0 (
+	mem_ctrl mem_ctrl0 (
 		clk, rst,
 		COMM_write_flag[0], COMM_write_data[0], COMM_write_length[0],
 		COMM_read_flag[0], COMM_read_data[0], COMM_read_length[0],
 		COMM_writable[0], COMM_readable[0],
-		MEM_rw_flag, MEM_addr,
-		MEM_read_data, MEM_write_data, MEM_write_mask,
-		MEM_busy, MEM_done
+		mem_rwe, mem_addr,
+		mem_r_data, mem_w_data, mem_sel,
+		mem_busy, mem_done
 	);
 
 	riscv_cpu riscv_cpu0 (
 		// input
 		.clk       (clk       ),
 		.rst       (rst       ),
-		.mem_data_i(mem_data_i),
-		.mem_busy_i(mem_busy_i),
-		.mem_done_i(mem_done_i),
+		.mem_data_i(mem_r_data),
+		.mem_busy_i(mem_busy  ),
+		.mem_done_i(mem_done  ),
 		// output
-		.mem_rwe_o (mem_rwe_o ),
-		.mem_addr_o(mem_addr_o),
-		.mem_sel_o (mem_sel_o ),
-		.mem_data_o(mem_data_o)
+		.mem_rwe_o (mem_rwe   ),
+		.mem_addr_o(mem_addr  ),
+		.mem_sel_o (mem_sel   ),
+		.mem_data_o(mem_w_data)
 	);
 
 endmodule // cpu

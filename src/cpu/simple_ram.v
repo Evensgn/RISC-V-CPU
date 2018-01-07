@@ -10,7 +10,7 @@ module simple_ram #(
 	input  wire [8*DataBusByteWidth-1:0] w_data,
 	input  wire [      AddrBusWidth-1:0] w_addr,
 	input  wire [  DataBusByteWidth-1:0] w_sel ,
-	output reg  [8*DataBusByteWidth-1:0] r_data,
+	output reg  [8*DataBusByteWidth-1:0] r_data
 );
 
 	reg [8*DataBusByteWidth-1:0] data[(1<<AddrBusWidth)-1:0];

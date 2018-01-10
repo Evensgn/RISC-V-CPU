@@ -176,7 +176,7 @@ module cache #(
 			pending_addr		<= 0;
 			pending_write_data	<= 0;
 			pending_write_mask 	<= 0;
-		end else if(!busy) begin
+		end else if (!busy) begin
 			if(!next_done && rw_flag_ != 0) begin
 				busy <= 1;
 				pending_rw_flag		<= rw_flag_;
@@ -184,7 +184,7 @@ module cache #(
 				pending_write_data	<= write_data_;
 				pending_write_mask	<= write_mask_;
 			end
-		end else if(next_done)
+		end else if (next_done)
 			busy <= 0;
 	end
 	

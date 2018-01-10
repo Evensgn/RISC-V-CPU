@@ -102,6 +102,7 @@ module riscv_cpu (
 
 	// PC_Reg -> IF
 	wire[`InstAddrBus] pc;
+	wire right_one;
 
 	// IF -> IF/ID
 	wire[`MemAddrBus] if_pc;
@@ -182,13 +183,14 @@ module riscv_cpu (
 
 	reg_pc reg_pc0 (
 		// input
-		.clk    (clk    ),
-		.rst    (rst    ),
-		.stall  (stall  ),
-		.br     (br     ),
-		.br_addr(br_addr),
+		.clk        (clk      ),
+		.rst        (rst      ),
+		.stall      (stall    ),
+		.br         (br       ),
+		.br_addr    (br_addr  ),
 		// output
-		.pc     (pc     )
+		.pc_o       (pc       ),
+		.right_one_o(right_one)
 	);
 
 	stage_if stage_if0 (
@@ -198,6 +200,8 @@ module riscv_cpu (
 		.mem_data_i(icache_r_data),
 		.mem_busy  (icache_busy  ),
 		.mem_done  (icache_done  ),
+		.br        (br           ),
+		.right_one (right_one    ),
 		// output
 		.mem_re    (icache_rwe[0]),
 		.mem_addr_o(icache_addr  ),

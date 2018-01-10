@@ -86,7 +86,7 @@ module stage_mem (
 					reg_wdata_o = reg_wdata_i;
 				end
 			endcase // aluop
-		end else if (mem_done && mem_taking) begin
+		end else if (!mem_busy && mem_taking) begin
 			stallreq   = 0;
 			mem_taking = 0;
 			case (aluop)

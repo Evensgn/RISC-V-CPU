@@ -3,13 +3,15 @@
 `include "defines.v"
 
 module cpu (
-	input  wire EXCLK ,
-	input  wire button,
-	output wire Tx    ,
+	input  wire EXCLK  ,
+	input  wire button ,
+	output wire rst_led,
+	output wire Tx     ,
 	input  wire Rx
 );
 
-	reg rst      ;
+	reg rst;
+	assign rst_led = rst;
 	reg rst_delay;
 
 	wire clk;

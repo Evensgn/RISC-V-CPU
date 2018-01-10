@@ -8,12 +8,14 @@ module sim_cpu();
 	wire button = ~rst;
 	wire Rx, Tx;
 
-	cpu cpu0(clk,button,Tx,Rx);
+    wire rst_led;
+    
+	cpu cpu0(clk,button, rst_led, Tx,Rx);
 	sim_memory sim_memory0(clk,rst,Rx,Tx);
 
 	initial begin
 		clk = 0;
-		forever #10 clk = ~clk;
+		forever #5 clk = ~clk;
 	end
 
 	initial begin

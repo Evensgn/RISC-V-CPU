@@ -260,7 +260,7 @@ module multichan_trans
 						if(recv_bit + PACKET_SIZE - 1 >= (recv_length << 3)) 
 							recv_status <= STATUS_END;
 					end else
-						recv_status <= STATU1S_IDLE;
+						recv_status <= STATUS_IDLE;
 				end
 				
 				STATUS_END: begin

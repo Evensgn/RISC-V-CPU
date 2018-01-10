@@ -11,10 +11,10 @@ module reg_pc (
 
 	always @ (posedge clk) begin
 		if (rst) begin
-			$display("PC: not good");
+			//$display("PC: not good");
 			pc <= 0;
 		end else if (!stall[0]) begin
-			$display("PC: oh?");
+			//$display("PC: oh?");
 			if (br) pc <= br_addr;
 			else pc <= pc + 4'h4;
 		end

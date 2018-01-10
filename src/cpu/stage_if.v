@@ -28,7 +28,7 @@ module stage_if (
 	always @ (*) begin
 		if (right_one) begin
 			waiting_one = 0;
-			$display("Right one is here, %h", pc_i);
+			//$display("Right one is here, %h", pc_i);
 		end
 		if (rst) begin
 			stallreq    = 0;
@@ -39,30 +39,30 @@ module stage_if (
 			mem_addr_o  = 0;
 			waiting_one = 0;
 		end else if (br) begin
-			$display("br");
+			//$display("br");
 			pc_o        = 0;
 			inst_o      = 0;
 			mem_taking  = 0;
 			stallreq    = 0;
 			waiting_one = 1;
 		end else if (waiting_one) begin
-			$display("waiting_one");
+			//$display("waiting_one");
 			// Do nothing
 		end else if (!mem_busy && !mem_taking) begin
-			$display("!mem_busy && !mem_taking");
+			//$display("!mem_busy && !mem_taking");
 			stallreq   = 1;
 			mem_taking = 1;
 			mem_re     = 1;
 			mem_addr_o = pc_i;
 		end else if (!mem_busy && mem_taking) begin
-			$display("!mem_busy && mem_taking");
+			//$display("!mem_busy && mem_taking");
 			stallreq   = 0;
 			mem_taking = 0;
 			pc_o       = pc_i;
 			inst_o     = mem_data_i;
-			$display("IF Get Inst: %h\n", inst_o);
+			//$display("IF Get Inst: %h\n", inst_o);
 		end else if (mem_busy) begin
-			$display("mem_busy, %h", pc_i);
+			//$display("mem_busy, %h", pc_i);
 			stallreq = 1;
 		end
 	end

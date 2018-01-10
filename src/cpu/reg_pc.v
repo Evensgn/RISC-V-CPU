@@ -26,7 +26,7 @@ module reg_pc (
 			right_one <= 0;
 			pc        <= 4;
 		end else if (!stall[0]) begin
-			$display("PC now: %h", pc);
+			//$display("PC now: %h", pc);
 			pc_o <= pc;
 			right_one_o <= right_one;
 		end

@@ -33,7 +33,7 @@ module riscv_cpu (
 	assign icache_flush_flag = 0;
 	assign icache_flush_addr = 0;
 
-	cache #(.INDEX_BIT(5), .NASSOC(2)) icache0 (
+	cache #(.INDEX_BIT(4), .NASSOC(2)) icache0 (
 		.clk           (clk              ),
 		.rst           (rst              ),
 		// with cpu core
@@ -70,7 +70,7 @@ module riscv_cpu (
 	assign dcache_flush_flag = 0;
 	assign dcache_flush_addr = 0;
 
-	cache #(.INDEX_BIT(2), .NASSOC(4)) dcache0 (
+	cache /*#(.INDEX_BIT(2), .NASSOC(4)) */dcache0 (
 		.clk           (clk              ),
 		.rst           (rst              ),
 		// with cpu core

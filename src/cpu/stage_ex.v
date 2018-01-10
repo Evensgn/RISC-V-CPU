@@ -113,23 +113,23 @@ module stage_ex (
 		mem_addr    = 0;
 		case (alusel)
 			`EXE_RES_LOGIC : begin
-				$display("EXE_RES_LOGIC");
+				//$display("EXE_RES_LOGIC");
 				reg_wdata = logic_out;
 			end
 			`EXE_RES_SHIFT : begin
-				$display("EXE_RES_SHIFT");
+				//$display("EXE_RES_SHIFT");
 				reg_wdata = shift_out;
 			end
 			`EXE_RES_ARITH : begin
-				$display("EXE_RES_ARITH");
+				//$display("EXE_RES_ARITH");
 				reg_wdata = arith_out;
 			end
 			`EXE_RES_JUMP_BRANCH : begin
-				$display("EXE_RES_JUMP_BRANCH: %d", link_addr);
+				//$display("EXE_RES_JUMP_BRANCH: %d", link_addr);
 				reg_wdata = link_addr;
 			end
 			`EXE_RES_LOAD_STORE : begin
-				$display("EXE_RES_LOAD_STORE");
+				//$display("EXE_RES_LOAD_STORE");
 				reg_wdata = 0;
 				mem_addr  = mem_out;
 			end

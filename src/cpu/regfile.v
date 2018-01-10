@@ -21,7 +21,7 @@ module regfile (
 		if (!rst) begin
 			// x0 cannot be written
 			if (we && waddr != 0) begin
-				$display("Write Regfile: x%d = %h", waddr, wdata);
+				//$display("Write Regfile: x%d = %h", waddr, wdata);
 				regs[waddr] <= wdata;
 			end
 		end

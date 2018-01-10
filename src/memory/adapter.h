@@ -26,9 +26,9 @@ public:
 	void onRecv(std::uint8_t data);
 
 	//TODO: You may the following settings according to the UART implementation in your CPU
-	std::uint32_t getBaudrate() { return 2500000; }
+	std::uint32_t getBaudrate() { return 2304000; }
 	serial::bytesize_t getBytesize() { return serial::eightbits; }
-	serial::parity_t getParity() { return serial::parity_none; }
+	serial::parity_t getParity() { return serial::parity_even; }
 	serial::stopbits_t getStopBits() { return serial::stopbits_one; }
 
 protected:

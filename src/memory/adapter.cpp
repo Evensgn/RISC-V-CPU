@@ -1,3 +1,5 @@
+// This file is based on Zhanghao Wu's code
+
 #include "adapter.h"
 #include <iostream>
 #include <iomanip>

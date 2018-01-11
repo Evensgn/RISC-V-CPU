@@ -2,7 +2,7 @@
 
 module uart_trans #(
 	parameter BAUDRATE  = 2304000 ,
-	parameter CLOCKRATE = 80000000
+	parameter CLOCKRATE = 70000000
 ) (
 	input            CLK       ,
 	input            RST       ,

@@ -16,14 +16,7 @@ module stage_if (
 );
 
 	reg mem_taking;
-	initial begin
-		mem_taking = 0;
-	end
-
 	reg waiting_one;
-	initial begin
-		waiting_one = 0;
-	end
 
 	always @ (*) begin
 		if (right_one) begin

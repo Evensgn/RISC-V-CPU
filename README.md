@@ -2,7 +2,7 @@
 
 Zhou Fan (范舟)
 
-This project is a RISC-V CPU with 5-stage pipeline implemented in verilog HDL, which is a course project of Computer Architecture, ACM Class @ SJTU.
+This project is a RISC-V CPU with 5-stage pipeline implemented in Verilog HDL, which is a course project of Computer Architecture, ACM Class @ SJTU.
 
 ## Documents
 
@@ -47,5 +47,5 @@ CPU Module Scematic
 * John L. Hennessy, David A. Patterson, et al. Computer Architecture: A Quantitative
 Approach, Fifth Edition, 2012.
 * David A. Patterson. PPT of CS252 Graduate Computer Architecture, 2001.
-* [Zhekai Zhang's CPU project](https://github.com/sxtyzhangzk/cpu-judge)
+* [Zhekai Zhang's CPU project](https://github.com/sxtyzhangzk/mips-cpu)
 * [Verilog: always @ Blocks by Chris Fletcher](doc/Always@.pdf)

@@ -40,7 +40,7 @@ module sim_memory (
 			memory[i] = 0;
 			memory_stack[i] = 0;
 		end
-		$readmemh("D:/Files/Progs/RISC-V-CPU/test/example.data", memory);
+		$readmemh("D:/Files/Progs/RISC-V-CPU/test/inst.data", memory);
 	end
 	
 	function [31:0] getDWORD;
@@ -68,14 +68,14 @@ module sim_memory (
 			if(readable) begin
 				read_flag <= 1;
 				if(read_data_length == 5 && read_data[32] == 0) begin	//read
-					$display("GET READ REQUEST, ADDR = 0x%x DATA = %x", read_data[31:0], getDWORD(read_data[31:0]));
+					//$display("GET READ REQUEST, ADDR = 0x%x DATA = %x", read_data[31:0], getDWORD(read_data[31:0]));
 					write_flag <= 1;
 					write_data <= getDWORD(read_data[31:0]);
 					write_data_length <= 4;
 				end else begin	//write
 					if (read_data[63:32] == 12'h104) 
 						$display("%c", read_data[31:0]);
-					$display("GET WRITE REQUEST, ADDR = 0x%x DATA = %x MASK = %d", read_data[63:32], read_data[31:0], read_data[67:64]);
+					//$display("GET WRITE REQUEST, ADDR = 0x%x DATA = %x MASK = %d", read_data[63:32], read_data[31:0], read_data[67:64]);
 					if(read_data[64])
 						memory[read_data[63:32]] <= read_data[7:0];
 					if(read_data[65])

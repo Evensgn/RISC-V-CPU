@@ -132,6 +132,13 @@ module stage_mem (
 			endcase // aluop
 		end else if (mem_busy) begin
 			stallreq = 1;
+		end else begin
+			`SET_MEM_INST(0, 0, 0, 0, 0, 0)
+			reg_waddr_o = 0;
+			we_o        = 0;
+			reg_wdata_o = 0;
+			mem_sel     = 4'b0000;
+			mem_taking  = 0;
 		end
 	end
 

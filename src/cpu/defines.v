@@ -89,7 +89,6 @@
 `define EXE_AND_OP 1
 `define EXE_OR_OP  2
 `define EXE_XOR_OP 3
-`define EXE_NOP_OP 4
 
 `define EXE_SLL_OP 5
 `define EXE_SRL_OP 6

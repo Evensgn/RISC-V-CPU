@@ -19,8 +19,8 @@ Data forwarding | √
 Cache | N-way set associate I-cache and D-cache [1]
 UART module | passed simulation [2]
 
-[1] The cache is based on [Zhekai Zhang's code](https://github.com/sxtyzhangzk/mips-cpu/blob/master/src/cpu/cache.v)
-[2] It is not tested on FPGA for the limited time 
+- [1] The cache is based on [Zhekai Zhang's code](https://github.com/sxtyzhangzk/mips-cpu/blob/master/src/cpu/cache.v)
+- [2] It is not tested on FPGA for the limited time 
 
 This CPU project has a five stage pipeline with data forwarding.
 In the picture below, red paths show stall control flow, while orange ones show data forwarding path.
@@ -48,3 +48,4 @@ CPU Module Scematic
 Approach, Fifth Edition, 2012.
 * David A. Patterson. PPT of CS252 Graduate Computer Architecture, 2001.
 * [Zhekai Zhang's CPU project](https://github.com/sxtyzhangzk/cpu-judge)
+* [Verilog: always @ Blocks by Chris Fletcher](doc/Always@.pdf)

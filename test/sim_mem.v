@@ -3,19 +3,22 @@
 `timescale 1ns / 1ps
 
 module sim_memory (
-	input CLK,
+	input EXCLK,
 	input RST,
 	output Tx,
 	input Rx
     );
     
+    wire clk;
+    clk_wiz_0 clk_wiz_0_0(.clk_out1(clk), .reset(0), .clk_in1(EXCLK));
+        
     wire send_flag;
 	wire [7:0] send_data;
 	wire recv_flag;
 	wire [7:0] recv_data;
 	
 	wire recvable, sendable;
-	uart_trans uart(CLK, RST, send_flag, send_data, recv_flag, recv_data, sendable, recvable, Tx, Rx);
+	uart_trans uart(clk, RST, send_flag, send_data, recv_flag, recv_data, sendable, recvable, Tx, Rx);
 	
 	reg read_flag;
 	wire [4:0] read_data_length;
@@ -51,12 +54,12 @@ module sim_memory (
 	endfunction
 	
 	multichan_trans #(.CHANNEL_BIT(1), .MESSAGE_BIT(72)) comm(
-		CLK, RST, send_flag, send_data, recv_flag, recv_data, sendable, recvable,
+		clk, RST, send_flag, send_data, recv_flag, recv_data, sendable, recvable,
 		{1'b0, read_flag}, {read_data_length, read_data},
 		{1'b0, write_flag}, {write_data_length, write_data},
 		{_trash, readable}, {_trash2, writable});
 	
-	always @(posedge CLK or posedge RST) begin
+	always @(posedge clk or posedge RST) begin
 		read_flag <= 0;
 		write_flag <= 0;
 		if(RST) begin

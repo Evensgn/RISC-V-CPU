@@ -38,25 +38,30 @@ module stage_if (
 			mem_taking  = 0;
 			stallreq    = 0;
 			waiting_one = 1;
-		end else if (waiting_one) begin
-			//$display("waiting_one");
-			// Do nothing
-		end else if (!mem_busy && !mem_taking) begin
+		end else if (!waiting_one && !mem_busy && !mem_taking) begin
 			//$display("!mem_busy && !mem_taking");
 			stallreq   = 1;
 			mem_taking = 1;
 			mem_re     = 1;
 			mem_addr_o = pc_i;
-		end else if (!mem_busy && mem_taking) begin
+		end else if (!waiting_one && !mem_busy && mem_taking) begin
 			//$display("!mem_busy && mem_taking");
 			stallreq   = 0;
 			mem_taking = 0;
 			pc_o       = pc_i;
 			inst_o     = mem_data_i;
 			//$display("IF Get Inst: %h\n", inst_o);
-		end else if (mem_busy) begin
+		end else if (!waiting_one && mem_busy) begin
 			//$display("mem_busy, %h", pc_i);
 			stallreq = 1;
+		end else if (!waiting_one) begin
+			stallreq    = 0;
+			mem_taking  = 0;
+			pc_o        = 0;
+			inst_o      = 0;
+			mem_re      = 0;
+			mem_addr_o  = 0;
+			waiting_one = 0;
 		end
 	end
 

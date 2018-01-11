@@ -37,7 +37,7 @@ This CPU is simulated with UART communication module in Xilinx vivado.
 Implementation on Basys3 FPGA, using Xilinx vivado.
 ![implementation-graph](doc/implementation-graph.png)
 Scematic Overview
-![implementation-circuit-overview](doc/implementation-circuit-overview.png)
+![implementation-circuit-overview](doc/implementation-circuit-overview-captioned.png)
 CPU Module Scematic
 ![implementation-circuit-cpu](doc/implementation-circuit-cpu.png)
 
@@ -47,4 +47,4 @@ CPU Module Scematic
 * John L. Hennessy, David A. Patterson, et al. Computer Architecture: A Quantitative
 Approach, Fifth Edition, 2012.
 * David A. Patterson. PPT of CS252 Graduate Computer Architecture, 2001.
-* [Zhekai Zhang's CPU project]()
+* [Zhekai Zhang's CPU project](https://github.com/sxtyzhangzk/cpu-judge)

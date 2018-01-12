@@ -6,7 +6,7 @@ This project is a RISC-V CPU with 5-stage pipeline implemented in Verilog HDL, w
 
 ## Documents
 
-* My [**Project Report**](doc/project-report.md)
+* My [**Project Report**](doc/project-report.pdf)
 * My [blog post](http://blog.evensgn.com/riscv-gnu-toolchain/) for installation and usage of RISV-V GNU toolchain (In Chinese) ([on GitHub](doc/riscv-toolchain-installation-usage.md))
 * [RISC-V 32I subset](doc/inst-supported.md) supported in this CPU project
 

@@ -137,12 +137,14 @@ The CPU with cache and UART module passed simulation in Xilinx Vivado using mult
 	\caption{Communication with memory simulator using UART protocol}
 \end{figure}
 
-\section{Puzzles \& Thinkings}
+\section{Thinkings}
 
 \paragraph{Efficiency} Time efficiency is always a significant issue in CPU design. When I wrote code for stall logic and Branch/Jump instruction processing part, I tried to minimize number of unused clock cycle. But when UART latency is considered, all of those optimization lose their meaning: UART communication is the only bottleneck of the pipeline, and even the pipeline is not a pipeline any more, for an instruction would goes through all stages before the next instruction is fetched. Though there is I-cache, it only works for loops. Therefore, UART may not be a perfect solution to memory simulation.
 
-\paragraph{Experience with FPGA} I tested the CPU on Basys 3 FPGA, it read the first 5 instructions correctly but did not jump at the 5th instruction, which is a branch instruction. That test program did not go wrong in Vivado simulation. In the last two days before deadline I tried to find the bug but did not make it. Zhanghao Wu gave me a tutorial about always @ blocks\cite{always}, from which I learned about latch generation. My original design for stall control with IF stages caused some latch inferring, which could be 'a
-terrible place for bugs'\cite{always} .
+\paragraph{Experience with FPGA} After cache and UART module passed simulation, I tested the CPU on Basys 3 FPGA, it read the first 5 instructions correctly but did not jump at the 5th instruction, which is a branch instruction. That test program did not go wrong in Vivado simulation. In the last two days before deadline I tried to find the bug but did not make it. Zhanghao Wu gave me a tutorial about always @ blocks\cite{always}, from which I learned about latch generation. My original design for stall control with IF stages caused some latch inferring, which could be "a
+terrible place for bugs"\cite{always}. I re-designed part of code to avoid latches, and found that it may need some more debugging. From this experience, I learned that some hidden trouble would not reveal itself in simulation. And I should have learned more about Verilog HDL before starting to write code.
+
+\paragraph{Automation} To compile and assemble test programs RISC-V toolchain and some other tools are used. Many commands are needed in this process. I \href{http://blog.evensgn.com/riscv-gnu-toolchain/}{wrote a Makefile} and found it really helpful. Automation improves efficiency and it feels good!
 
 \section{Acknowledgements}
 Special thanks would go to Zhanghao Wu (吴章昊) for his instructive discusstions and useful suggestions on this project. I would like to express my gratitude to TA Zhekai Zhang (张哲恺) as well, for his MIPS CPU project (especially the code of cache and UART module) and much work for this assignment. I am also indebted to many other classmates for their direct and indirect help to me.

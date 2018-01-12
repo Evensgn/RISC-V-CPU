@@ -19,6 +19,7 @@
 }
 \renewcommand\contentsname{Contents}
 \renewcommand\refname{References}
+\renewcommand\figurename{Fig.}
 \definecolor{bgGray}{RGB}{36, 36, 36}
 \usepackage[
   colorlinks,
@@ -81,8 +82,10 @@ This project is a RISC-V CPU with five-stage pipeline, implemented in Verilog HD
 
 \section{Design}
 
-% Please add the following required packages to your document preamble:
-% 
+\subsection{Features}
+
+Main features of this RISC-V CPU are briefly introduced in the table below.
+
 \begin{table}[H]
 \centering
 \begin{tabular}{@{}ll@{}}
@@ -91,20 +94,78 @@ This project is a RISC-V CPU with five-stage pipeline, implemented in Verilog HD
 ISA                         & RISC-V (\href{https://github.com/Evensgn/RISC-V-CPU/blob/dev/doc/inst-supported.md}{RV32I subset}) \\
 Pipelining                  & 5 stages                                                                                              \\
 Data forwarding             & complete forwarding path                                                                              \\
-Cache                       & N-way set associate I-cache and D-cache                                 \\ \bottomrule
+Cache                       & N-way set associate I-cache and D-cache\footnotemark[1]                                 \\
+UART module                 & passed simulation \footnotemark[2] \\
+Security                    & perfect proof against Meltdown and Spectre attack \footnotemark[3] \\
+ \bottomrule
 \end{tabular}
 \end{table}
 
+\begin{enumerate}
+	\item The cache is based on Zhekai Zhang's (张哲恺) code\cite{zzk}. 
+	\item UART module has not passed test on FPGA yet for the limited time. I re-designed part of CPU code to avoid hidden danger on FPGA, and it may need some more debugging.
+	\item Just kidding ;-) That's because the CPU is not with branch prediction or out-of-order execution.
+\end{enumerate}
+
+\subsection{Specification}
+
+The CPU has a standard 5-stage pipeline with complete path data forwarding. Data produced by EX stage or MEM stage is passed to ID stage, which avoids most of RAW data hazard under ideal conditions (causes stall only if producer is a load instruction).
+
+The picture below shows structure of the CPU design, each module is implemented in a single verilog file. Red paths show the stall control flow, while orange ones show data forwarding path.
+
+\begin{figure}[H]
+	\begin{center}
+	  \includegraphics[height=9cm]{cpu-pipeline-graph.png}
+	\end{center}
+\end{figure}
+
 \begin{itemize}
-	\item 
-	\item 
+	\item Instruction fetching, Load/Store instruction or data dependency may cause stall of pipeline, the logic of stall is managed by a stall controller module. It receives stall requests from IF/ID/MEM stage, and emit stall signals to modules that should pause.
+
+	\item For program test on FPGA without capable memory, the CPU uses UART protocol to communicate with PC, where runs a memory simulator written in C++.
+
+	\item Latency of UART communication makes it significant to use a cache, the cache is N-way associate using LRU replacement policy. It is based on code from Zhekai Zhang's MIPS CPU project.
 \end{itemize}
 
-\section{Discusstion}
+The CPU with cache and UART module passed simulation in Xilinx Vivado using multiple test data. But something goes wrong when tested on FPGA (Basys 3), which is explained in the next section.
+
+\begin{figure}[H]
+	\begin{center}
+	  \includegraphics[height=9cm]{uart-simulate-memory.png}
+	\end{center}
+	\caption{Communication with memory simulator using UART protocol}
+\end{figure}
+
+\section{Puzzles \& Thinkings}
+
+\paragraph{Efficiency} Time efficiency is always a significant issue in CPU design. When I wrote code for stall logic and Branch/Jump instruction processing part, I tried to minimize number of unused clock cycle. But when UART latency is considered, all of those optimization lose their meaning: UART communication is the only bottleneck of the pipeline, and even the pipeline is not a pipeline any more, for an instruction can easily goes through all stages before the next instruction is fetched. 
 
 \section{Acknowledgements}
 
 Special thanks would go to Zhanghao Wu (吴章昊) for his instructive discusstions and useful suggestions on this project. I would like to express my gratitude to TA Zhekai Zhang (张哲恺) as well, for his MIPS CPU project (especially the code of cache and UART module) and much work for this assignment. I am also indebted to many other classmates for their direct and indirect help to me.
+
+\section{Appendix}
+
+\begin{figure}[H]
+	\begin{center}
+	  \includegraphics[height=9.5cm]{implementation-graph.png}
+	\end{center}
+	\caption{Implementation on Basys 3 FPGA, using Xilinx Vivado}
+\end{figure}
+
+\begin{figure}[H]
+	\begin{center}
+	  \includegraphics[height=8cm]{implementation-circuit-overview-captioned.png}
+	\end{center}
+	\caption{Scematic Overview}
+\end{figure}
+
+\begin{figure}[H]
+	\begin{center}
+	  \includegraphics[height=6.5cm]{implementation-circuit-cpu.png}
+	\end{center}
+	\caption{CPU Module Scematic}
+\end{figure}
 
 \begin{thebibliography}{9}
   \bibitem{lsl}
@@ -124,8 +185,7 @@ Special thanks would go to Zhanghao Wu (吴章昊) for his instructive discussti
   	\url{https://github.com/sxtyzhangzk/mips-cpu}
   \bibitem{always}
   	Chris Fletcher.
-  	\emph{Verilog: always @ Blocks}
-  	\url{https://github.com/Evensgn/RISC-V-CPU/blob/dev/doc/Always@.pdf}
+  	\emph{\href{https://github.com/Evensgn/RISC-V-CPU/blob/dev/doc/Always@.pdf}{Verilog: always @ Blocks}}
   
 \end{thebibliography}
 

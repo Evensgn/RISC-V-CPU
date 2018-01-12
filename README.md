@@ -18,9 +18,11 @@ Pipelining | 5 stages
 Data forwarding | √
 Cache | N-way set associate I-cache and D-cache [1]
 UART module | passed simulation [2]
+Security | perfect proof against Meltdown and Spectre attack [3]
 
 - [1] The cache is based on [Zhekai Zhang's code](https://github.com/sxtyzhangzk/mips-cpu/blob/master/src/cpu/cache.v)
-- [2] It is not tested on FPGA for the limited time 
+- [2] UART module has not passed test on FPGA yet for the limited time. I re-designed part of CPU code to avoid hidden danger on FPGA, and it may need some more debugging.
+- [3] Just kidding ;-) That's because the CPU is not with branch prediction or out-of-order execution.
 
 This CPU project has a five stage pipeline with data forwarding.
 In the picture below, red paths show stall control flow, while orange ones show data forwarding path.

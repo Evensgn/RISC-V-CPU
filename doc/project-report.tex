@@ -117,6 +117,7 @@ The picture below shows structure of the CPU design, each module is implemented 
 	\begin{center}
 	  \includegraphics[height=9cm]{cpu-pipeline-graph.png}
 	\end{center}
+	\caption{Overview of CPU Design}
 \end{figure}
 
 \begin{itemize}
@@ -127,7 +128,7 @@ The picture below shows structure of the CPU design, each module is implemented 
 	\item Latency of UART communication makes it significant to use a cache, the cache is N-way associate using LRU replacement policy. It is based on code from Zhekai Zhang's MIPS CPU project.
 \end{itemize}
 
-The CPU with cache and UART module passed simulation in Xilinx Vivado using multiple test data. But something goes wrong when tested on FPGA (Basys 3), which is explained in the next section.
+The CPU with cache and UART module passed simulation in Xilinx Vivado using multiple test programs. But something goes wrong when tested on FPGA (Basys 3), which is explained in the next section.
 
 \begin{figure}[H]
 	\begin{center}
@@ -138,10 +139,12 @@ The CPU with cache and UART module passed simulation in Xilinx Vivado using mult
 
 \section{Puzzles \& Thinkings}
 
-\paragraph{Efficiency} Time efficiency is always a significant issue in CPU design. When I wrote code for stall logic and Branch/Jump instruction processing part, I tried to minimize number of unused clock cycle. But when UART latency is considered, all of those optimization lose their meaning: UART communication is the only bottleneck of the pipeline, and even the pipeline is not a pipeline any more, for an instruction can easily goes through all stages before the next instruction is fetched. 
+\paragraph{Efficiency} Time efficiency is always a significant issue in CPU design. When I wrote code for stall logic and Branch/Jump instruction processing part, I tried to minimize number of unused clock cycle. But when UART latency is considered, all of those optimization lose their meaning: UART communication is the only bottleneck of the pipeline, and even the pipeline is not a pipeline any more, for an instruction would goes through all stages before the next instruction is fetched. Though there is I-cache, it only works for loops. Therefore, UART may not be a perfect solution to memory simulation.
+
+\paragraph{Experience with FPGA} I tested the CPU on Basys 3 FPGA, it read the first 5 instructions correctly but did not jump at the 5th instruction, which is a branch instruction. That test program did not go wrong in Vivado simulation. In the last two days before deadline I tried to find the bug but did not make it. Zhanghao Wu gave me a tutorial about always @ blocks\cite{always}, from which I learned about latch generation. My original design for stall control with IF stages caused some latch inferring, which could be 'a
+terrible place for bugs'\cite{always} .
 
 \section{Acknowledgements}
-
 Special thanks would go to Zhanghao Wu (吴章昊) for his instructive discusstions and useful suggestions on this project. I would like to express my gratitude to TA Zhekai Zhang (张哲恺) as well, for his MIPS CPU project (especially the code of cache and UART module) and much work for this assignment. I am also indebted to many other classmates for their direct and indirect help to me.
 
 \section{Appendix}

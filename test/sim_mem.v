@@ -40,7 +40,7 @@ module sim_memory (
 			memory[i] = 0;
 			memory_stack[i] = 0;
 		end
-		$readmemh("D:/Files/Progs/RISC-V-CPU/test/inst.data", memory);
+		$readmemh("D:/Files/Progs/RISC-V-CPU/test/example.data", memory);
 	end
 	
 	function [31:0] getDWORD;

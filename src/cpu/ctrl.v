@@ -2,6 +2,7 @@
 
 module ctrl (
 	input  wire       rst         ,
+	input  wire       stallreq_if ,
 	input  wire       stallreq_id ,
 	input  wire       stallreq_ex ,
 	input  wire       stallreq_mem,
@@ -24,6 +25,8 @@ module ctrl (
 			stall <= 6'b001111;
 		end else if (stallreq_id) begin
 			stall <= 6'b000111;
+		end else if (stallreq_if) begin
+			stall <= 6'b000011;
 		end else begin
 			stall <= 6'b000000;
 		end

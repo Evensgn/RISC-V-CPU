@@ -89,7 +89,6 @@
 `define EXE_AND_OP 1
 `define EXE_OR_OP  2
 `define EXE_XOR_OP 3
-`define EXE_NOP_OP 4
 
 `define EXE_SLL_OP 5
 `define EXE_SRL_OP 6
@@ -138,7 +137,9 @@
 
 // Memory
 `define MemAddrBus 31:0
+`define MemAddrWidth 32
 `define MemDataBus 31:0
+`define MemDataWidth 32
 `define ByteBus 7:0
 `define DataMemNum 131072
 `define DataMemNumLog2 17

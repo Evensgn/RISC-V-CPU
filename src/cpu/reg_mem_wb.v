@@ -13,7 +13,7 @@ module reg_mem_wb (
 );
 
 	always @ (posedge clk) begin
-		if(rst && (stall[4] && !stall[5])) begin
+		if(rst || (stall[4] && !stall[5])) begin
 			wb_reg_waddr <= 0;
 			wb_we        <= 0;
 			wb_reg_wdata <= 0;
